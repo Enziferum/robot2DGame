@@ -1,6 +1,7 @@
 #include <robot2DGame/systems/RendererSystem.hpp>
-#include <robot2DGame/components/DrawableComponent.hpp>
-#include <robot2DGame/components/TransformComponent.hpp>
+#include <robot2DGame/Api.hpp>
+#include <robot2DGame/components/UIAnimationComponent.hpp>
+#include <robot2DGame/systems/UIAnimationSystem.hpp>
 
 #include <game/IntroState.hpp>
 
@@ -19,13 +20,20 @@ void IntroState::setup() {
 void IntroState::setupEcs() {
     auto windowSz = m_window -> getSize();
     m_scene.addSystem<robot2D::RenderSystem>(m_messageBus);
-    auto entity = m_scene.createEntity();
+    m_scene.addSystem<robot2D::UIAnimationSystem>(m_messageBus);
 
-    auto& transform = entity.addComponent<robot2D::TransformComponent>();
-    transform.setPosition({windowSz.as<float>().x / 2.F, windowSz.as<float>().y / 2.F});
-    transform.setSize({200.F, 200.F});
+    robot2D::vec2f startSize = {};
 
-    entity.addComponent<robot2D::DrawableComponent>().setTexture(m_textures.get(TextureID::Logo));
+    auto entity = robot2D::createEntity(m_scene,
+                                        {windowSz.as<float>().x / 2.F,
+                                                windowSz.as<float>().y / 2.F},
+                                        startSize,
+                                        m_textures.get(TextureID::Logo));
+
+    auto& animation = entity.addComponent<robot2D::UIAnimationComponent>();
+    animation.duration = robot2D::seconds(2);
+    animation.from = startSize;
+    animation.to = {300.F, 300.F};
 }
 
 void IntroState::destroy() {}

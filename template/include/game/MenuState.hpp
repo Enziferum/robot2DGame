@@ -3,6 +3,11 @@
 #include <robot2DGame/State.hpp>
 #include <robot2D/Core/MessageBus.hpp>
 #include <robot2D/Ecs/Scene.hpp>
+#include <robot2D/Util/ResourceHandler.hpp>
+
+enum class ResourceID {
+    Button
+};
 
 class MenuState final: public robot2D::State {
 public:
@@ -20,4 +25,5 @@ public:
     void render() override;
 private:
     robot2D::ecs::Scene m_scene;
+    robot2D::ResourceHandler<robot2D::Texture, ResourceID> m_textures;
 };

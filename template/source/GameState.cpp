@@ -1,10 +1,10 @@
 #include <game/GameState.hpp>
 
 GameState::GameState(robot2D::IStateMachine& machine,
-                     robot2D::MessageBus& messageBus):
-            robot2D::State{machine},
-            m_messageBus{messageBus},
-            m_world(messageBus)
+                     robot2D::AppContext& context, robot2D::MessageBus& messageBus):
+            robot2D::State{machine, context, messageBus},
+            m_world{messageBus},
+            m_gameUI{messageBus}
             {}
 
 void GameState::setup() {
@@ -33,6 +33,6 @@ void GameState::update(float dt) {
 }
 
 void GameState::render() {
-    m_window.draw(m_world);
-    m_window.draw(m_gameUI);
+    m_window -> draw(m_world);
+    m_window -> draw(m_gameUI);
 }

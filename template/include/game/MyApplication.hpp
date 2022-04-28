@@ -2,11 +2,17 @@
 
 #include <robot2DGame/Application.hpp>
 
-class MyApplication: public robot2D::Application {
+class MyApplication: public robot2D::GameApplication {
 public:
     MyApplication();
     ~MyApplication() override = default;
 
     void setup() override;
-    void registerStates() override;
+
+protected:
+    void handleEvents(const robot2D::Event &event) override;
+    void update(float dt) override;
+    void render() override;
+private:
+    void registerStates();
 };

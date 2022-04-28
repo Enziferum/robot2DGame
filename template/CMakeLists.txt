@@ -11,6 +11,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 	and run CMake from there. You may need to remove CMakeCache.txt.")
 endif()
 
+include(CheckCXXCompilerFlag)
 set(CMAKE_CXX_STANDARD 17)
 
 function(enable_cxx_compiler_flag_if_supported flag)
@@ -36,9 +37,13 @@ else()
     enable_cxx_compiler_flag_if_supported("-Wpedantic")
     #enable_cxx_compiler_flag_if_supported("-Werror")
 endif()
+set(LIBS)
+if(UNIX)
+    find_package(OpenGL REQUIRED)
+    set(LIBS robot2D robot2D_ext OpenGL::GL ${CMAKE_DL_LIBS})
+endif()
 
-set(LIBS robot2DGame)
-
+set(LIBS robot2DGame ${LIBS})
 file(GLOB_RECURSE SRC source/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC})
@@ -47,3 +52,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "$<INSTALL_INTERFACE:include>")
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/res/
+        ${CMAKE_CURRENT_BINARY_DIR}/res/)

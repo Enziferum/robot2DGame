@@ -1,17 +1,9 @@
-#include <robot2D/robot2D.hpp>
+#include <robot2D/Engine.hpp>
 #include <game/MyApplication.hpp>
 
 int main() {
-    robot2D::InitializeEngine();
-
-    MyApplication application;
-    application.setup();
-
-    try {
-        application.run();
-    }
-    catch (...) {
-
-    }
-    return 0;
+    robot2D::EngineConfiguration engineConfiguration;
+    engineConfiguration.windowSize = {1280, 920};
+    engineConfiguration.windowTitle = "Template Game";
+    ROBOT2D_RUN_ENGINE(MyApplication, engineConfiguration);
 }

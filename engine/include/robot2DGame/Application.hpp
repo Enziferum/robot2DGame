@@ -1,27 +1,25 @@
 #pragma once
 
-#include <robot2D/Graphics/RenderWindow.hpp>
+#include <robot2D/Application.hpp>
 #include <robot2D/Core/MessageBus.hpp>
+#include "StateMachine.hpp"
 
 namespace robot2D {
-    class Application {
+    class GameApplication: public Application {
     public:
-        Application();
-        virtual ~Application() = 0;
+        GameApplication();
+        virtual ~GameApplication() = 0;
 
-        virtual void setup() = 0;
-        virtual void registerStates() = 0;
-
-        void run();
-    private:
-        void handleEvents();
+        virtual void setup();
+    protected:
+        virtual void handleEvents(const robot2D::Event& event) = 0;
         void handleMessages();
-        void update(float dt);
-        void render();
+        virtual void update(float dt) = 0;
+        virtual void render() = 0;
 
-        void destroy();
-    private:
-        robot2D::RenderWindow m_window;
+    protected:
         robot2D::MessageBus m_bus;
+        StateMachine m_machine;
+        AppContext m_context;
     };
 }

@@ -7,7 +7,9 @@
 
 class GameState final: public robot2D::State {
 public:
-    GameState(robot2D::IStateMachine& machine, robot2D::MessageBus& messageBus);
+    GameState(robot2D::IStateMachine&,
+              robot2D::AppContext& context,
+              robot2D::MessageBus& messageBus);
     ~GameState() override = default;
 
     void setup() override;
@@ -19,7 +21,6 @@ public:
     void render() override;
     void update(float dt) override;
 private:
-    robot2D::MessageBus& m_messageBus;
     World m_world;
     GameUI m_gameUI;
 };

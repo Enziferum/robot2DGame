@@ -22,7 +22,7 @@ def replace_text_in_file(src_path, dst_path, anchor_text, prev_text, text):
 
 class ProjectGenerator:
     def __init__(self):
-        self.template_folder = 'templates'
+        self.template_folder = 'template'
 
     def __copy_template(self, fullpath):
         src_path = os.curdir
@@ -34,7 +34,7 @@ class ProjectGenerator:
         cmake_path_src = os.path.join(fullpath, f'{cmake_text}.in')
         cmake_path_dst = os.path.join(fullpath, f'{cmake_text}')
 
-        project_text = f'set(PROJECT_NAME {name})'
+        project_text = f'project({name})'
 
         replace_text_in_file(cmake_path_src,
                              cmake_path_dst,
@@ -52,6 +52,8 @@ class ProjectGenerator:
 
         print("Step 2: Set Project name")
         self.__rename_project(name, fullpath)
+
+        print(f"Success created project: {name}, at {fullpath}")
 
 
 # Press the green button in the gutter to run the script.

@@ -13,7 +13,8 @@ public:
 
     void handleMessages(const robot2D::Message& message);
     void update(float dt);
-    void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override;
+    void draw(robot2D::RenderTarget& target,
+              robot2D::RenderStates states) const override;
 private:
     robot2D::ecs::Scene m_scene;
 };

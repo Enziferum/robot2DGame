@@ -6,6 +6,13 @@ set(ENGINE_SRC
         ${INCLROOT}/State.hpp
         ${INCLROOT}/StateMachine.hpp
 
+        #components
+        ${INCLROOT}/components/DrawableComponent.hpp
+        ${INCLROOT}/components/TransformComponent.hpp
+
+        #systems
+        ${INCLROOT}/systems/RenderSystem.hpp
+
         PARENT_SCOPE
         )
 
@@ -16,6 +23,12 @@ set(ENGINE_SRC ${ENGINE_SRC}
         ${SRCROOT}/Application.cpp
         ${SRCROOT}/State.cpp
         ${SRCROOT}/StateMachine.cpp
+
+        #components
+        ${SRCROOT}/components/DrawableComponent.cpp
+
+        #systems
+        ${SRCROOT}/systems/RenderSystem.cpp
 
         PARENT_SCOPE
         )

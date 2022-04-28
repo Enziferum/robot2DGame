@@ -1,10 +1,18 @@
 #pragma once
 
 #include <robot2DGame/State.hpp>
+#include <robot2D/Ecs/Scene.hpp>
+#include <robot2D/Util/ResourceHandler.hpp>
+
+enum class TextureID {
+    Logo = 0
+};
 
 class IntroState final: public robot2D::State {
 public:
-    IntroState();
+    IntroState(robot2D::IStateMachine& machine,
+               robot2D::AppContext& context,
+               robot2D::MessageBus& messageBus);
     ~IntroState() override = default;
 
     void setup() override;
@@ -15,5 +23,10 @@ public:
 
     void update(float dt) override;
     void render() override;
+
 private:
+    void setupEcs();
+private:
+    robot2D::ecs::Scene m_scene;
+    robot2D::ResourceHandler<robot2D::Texture, TextureID> m_textures;
 };

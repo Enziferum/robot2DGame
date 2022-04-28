@@ -1,10 +1,14 @@
 #pragma once
 
 #include <robot2DGame/State.hpp>
+#include <robot2D/Core/MessageBus.hpp>
+#include <robot2D/Ecs/Scene.hpp>
 
 class MenuState final: public robot2D::State {
 public:
-    MenuState();
+    MenuState(robot2D::IStateMachine& machine,
+              robot2D::AppContext& context,
+              robot2D::MessageBus& messageBus);
     ~MenuState() override = default;
 
     void setup() override;
@@ -14,6 +18,6 @@ public:
     void handleMessages(const robot2D::Message&) override;
     void update(float dt) override;
     void render() override;
-
 private:
+    robot2D::ecs::Scene m_scene;
 };

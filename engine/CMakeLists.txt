@@ -11,6 +11,7 @@ set(ENGINE_SRC
         ${INCLROOT}/components/TransformComponent.hpp
         ${INCLROOT}/components/UIAnimationComponent.hpp
         ${INCLROOT}/components/UIHitbox.hpp
+        ${INCLROOT}/components/BroadphaseComponent.hpp
 
         #systems
         ${INCLROOT}/systems/RenderSystem.hpp

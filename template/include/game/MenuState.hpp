@@ -23,6 +23,10 @@ public:
     void handleMessages(const robot2D::Message&) override;
     void update(float dt) override;
     void render() override;
+
+private:
+    void onStartButton(robot2D::ecs::Entity entity, uint64_t flags);
+    void onEndButton(robot2D::ecs::Entity entity, uint64_t flags);
 private:
     robot2D::ecs::Scene m_scene;
     robot2D::ResourceHandler<robot2D::Texture, ResourceID> m_textures;

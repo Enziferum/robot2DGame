@@ -8,8 +8,8 @@
 namespace robot2D {
     RenderSystem::RenderSystem(robot2D::MessageBus& messageBus):
             ecs::System(messageBus,typeid(RenderSystem)) {
-        addRequirement<DrawableComponent>();
         addRequirement<TransformComponent>();
+        addRequirement<DrawableComponent>();
     }
 
     void RenderSystem::update(float dt) {}
@@ -24,10 +24,12 @@ namespace robot2D {
 
             t.scale(sz.x, sz.y);
 
-            states.transform = t;
-            states.texture = &sprite.getTexture();
-            states.color = sprite.getColor();
-            target.draw(states);
+            robot2D::RenderStates renderStates;
+            renderStates.transform *= t;
+            renderStates.texture = &sprite.getTexture();
+            renderStates.color = sprite.getColor();
+
+            target.draw(renderStates);
         }
     }
 }

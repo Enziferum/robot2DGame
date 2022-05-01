@@ -3,7 +3,9 @@
 #include <cmath>
 
 namespace robot2D {
-    DrawableComponent::DrawableComponent(): m_color(robot2D::Color::White) {}
+    DrawableComponent::DrawableComponent():
+    m_color(robot2D::Color::White),
+    m_texture{nullptr}{}
 
     void DrawableComponent::setTexture(const robot2D::Texture& texture) {
         m_texture = &texture;
@@ -14,7 +16,7 @@ namespace robot2D {
     }
 
     const robot2D::Texture& DrawableComponent::getTexture() const {
-        return* m_texture;
+        return *m_texture;
     }
 
     void DrawableComponent::setColor(const robot2D::Color& color) {

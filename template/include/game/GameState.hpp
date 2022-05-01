@@ -4,6 +4,7 @@
 
 #include "World.hpp"
 #include "GameUI.hpp"
+#include "InputParser.hpp"
 
 class GameState final: public robot2D::State {
 public:
@@ -23,4 +24,5 @@ public:
 private:
     World m_world;
     GameUI m_gameUI;
+    InputParser m_inputParser;
 };

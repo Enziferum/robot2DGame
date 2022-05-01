@@ -6,6 +6,20 @@ namespace robot2D {
     robot2D::ecs::Entity
     createEntity(robot2D::ecs::Scene& scene,
                  vec2f position,
+                 vec2f size) {
+        auto entity= scene.createEntity();
+        auto& transform = entity.addComponent<robot2D::TransformComponent>();
+        transform.setPosition(position);
+        transform.setSize(size);
+
+        auto& drawable = entity.addComponent<robot2D::DrawableComponent>();
+
+        return entity;
+    }
+
+    robot2D::ecs::Entity
+    createEntity(robot2D::ecs::Scene& scene,
+                 vec2f position,
                  vec2f size,
                  Texture& texture) {
         auto entity= scene.createEntity();

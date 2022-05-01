@@ -20,7 +20,7 @@ void MyApplication::registerStates() {
     m_machine.registerState<MenuState>(static_cast<robot2D::StateID>(States::Menu));
     m_machine.registerState<GameState>(static_cast<robot2D::StateID>(States::Game));
 
-    m_machine.pushState(static_cast<robot2D::StateID>(States::Menu));
+    m_machine.pushState(static_cast<robot2D::StateID>(States::Game));
 }
 
 void MyApplication::handleEvents(const robot2D::Event& event) {

@@ -8,12 +8,28 @@ namespace robot2D {
         TransformComponent() = default;
         ~TransformComponent() override = default;
 
+        const vec2f& getOrigin() const {
+            return m_origin;
+        }
+
         const vec2f& getSize() const {
             return m_size;
         }
 
         const vec2f& getPosition() const {
             return m_pos;
+        }
+
+        Transform getWorldTransform() const {
+            return getTransform();
+        }
+
+        vec2f getWorldPosition() const {
+            return getWorldTransform().transformPoint({});
+        }
+
+        const robot2D::vec2f& getScale() const {
+            return m_scale_factor;
         }
 
         FloatRect getLocalBounds() {

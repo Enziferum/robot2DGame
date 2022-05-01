@@ -9,7 +9,7 @@ GameState::GameState(robot2D::IStateMachine& machine,
 
 void GameState::setup() {
     /// Initalize Resources
-    m_world.setup();
+    m_world.setup(m_inputParser);
     m_gameUI.setup();
 }
 
@@ -19,7 +19,7 @@ void GameState::destroy() {
 
 
 void GameState::handleEvents(const robot2D::Event& event) {
-
+    m_inputParser.handleEvent(event);
 }
 
 void GameState::handleMessages(const robot2D::Message& message) {
@@ -28,6 +28,7 @@ void GameState::handleMessages(const robot2D::Message& message) {
 }
 
 void GameState::update(float dt) {
+    m_inputParser.update();
     m_world.update(dt);
     m_gameUI.update(dt);
 }

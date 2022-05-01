@@ -14,6 +14,10 @@ public:
     void update(float dt);
     void draw(robot2D::RenderTarget& target,
               robot2D::RenderStates states) const override;
+
 private:
+    void setupEcs();
+private:
+    robot2D::MessageBus& m_bus;
     robot2D::ecs::Scene m_scene;
 };

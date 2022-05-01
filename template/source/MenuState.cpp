@@ -24,17 +24,11 @@ void MenuState::setup() {
     auto windowSize = m_window -> getSize();
 
     auto startButton = robot2D::createImageButton(m_scene,
-                                                  {windowSize.as<float>().x / 3,
+                                                  { windowSize.as<float>().x / 2,
                                                            windowSize.as<float>().y / 2},
                                                   buttonSize,
                                                   m_textures.get(ResourceID::Button),
-                                                  [this](robot2D::ecs::Entity entity,
-                                                         std::uint64_t flags) {
-        if ( flags & robot2D::UISystem::Flags::LeftMouse) {
-            m_machine.pop();
-            m_machine.pushState(static_cast<robot2D::StateID>(States::Game));
-        }
-    });
+                                                  BIND_BUTTON_CLASS_FN(MenuState::onStartButton));
 
     auto startPos = startButton.getComponent<robot2D::TransformComponent>().getPosition();
     robot2D::vec2f endBtnPosition = {startPos.x, startPos.y + buttonSize.y * 2};
@@ -43,12 +37,22 @@ void MenuState::setup() {
                                                 endBtnPosition,
                                                 buttonSize,
                                                   m_textures.get(ResourceID::Button),
-                                                  [this](robot2D::ecs::Entity entity,
-                                                          std::uint64_t flags) {
+                                                  BIND_BUTTON_CLASS_FN(MenuState::onEndButton));
+}
 
-        if ( flags & robot2D::UISystem::Flags::LeftMouse)
-            destroy();
-    });
+void MenuState::onStartButton(robot2D::ecs::Entity entity, uint64_t flags) {
+    (void)entity;
+
+    if ( flags & robot2D::UISystem::Flags::LeftMouse) {
+        m_machine.pop();
+        m_machine.pushState(static_cast<robot2D::StateID>(States::Game));
+    }
+}
+
+void MenuState::onEndButton(robot2D::ecs::Entity entity, uint64_t flags) {
+    (void)entity;
+    if ( flags & robot2D::UISystem::Flags::LeftMouse)
+        destroy();
 }
 
 void MenuState::destroy() {

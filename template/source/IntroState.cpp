@@ -5,6 +5,11 @@
 
 #include <game/IntroState.hpp>
 
+namespace {
+    constexpr float animationDuration = 2.F;
+    constexpr robot2D::vec2f animationTo = {300.F, 300.F};
+}
+
 IntroState::IntroState(robot2D::IStateMachine& machine,
                        robot2D::AppContext& context,
                        robot2D::MessageBus& messageBus):
@@ -31,9 +36,9 @@ void IntroState::setupEcs() {
                                         m_textures.get(TextureID::Logo));
 
     auto& animation = entity.addComponent<robot2D::UIAnimationComponent>();
-    animation.duration = robot2D::seconds(2);
+    animation.duration = robot2D::seconds(animationDuration);
     animation.from = startSize;
-    animation.to = {300.F, 300.F};
+    animation.to = animationTo;
 }
 
 void IntroState::destroy() {}

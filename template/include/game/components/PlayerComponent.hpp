@@ -20,7 +20,7 @@ struct PlayerComponent final {
     {
         Running, Falling,
         Dying, Dead
-    }state = Falling;
+    }state = Running;
 
     static constexpr float Acceleration = 120.f;
     static constexpr float Drag = 0.81f;

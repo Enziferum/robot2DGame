@@ -12,6 +12,9 @@ namespace robot2D {
 
         void update(float dt) override;
         void draw(RenderTarget& target, RenderStates states) const override;
+
+    private:
+        bool m_needUpdateZBuffer;
     };
 
 

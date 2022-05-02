@@ -55,15 +55,19 @@ else()
 endif()
 
 find_package(glfw3 REQUIRED)
-find_package(robot2D)
-find_package(robot2D_ext QUIET)
 find_package(spdlog)
 find_package(OpenAL)
+find_package(Freetype)
 
+find_package(robot2D QUIET)
+find_package(robot2D_ext QUIET)
+
+
+include_directories(${FREETYPE_INCLUDE_DIRS})
 add_subdirectory(engine)
 
 add_library(${PROJECT_NAME} ${ENGINE_SRC})
-set(LIBS ${LIBS} robot2D)
+set(LIBS ${LIBS} robot2D ${FREETYPE_LIBRARIES})
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC

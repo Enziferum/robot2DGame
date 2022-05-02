@@ -1,6 +1,8 @@
 #include <robot2DGame/Api.hpp>
-#include <robot2DGame/components/UIHitbox.hpp>
 #include <robot2DGame/systems/UISystem.hpp>
+
+#include <robot2DGame/components/UIHitbox.hpp>
+#include <robot2DGame/components/TextComponent.hpp>
 
 namespace robot2D {
     robot2D::ecs::Entity
@@ -38,6 +40,7 @@ namespace robot2D {
                       robot2D::vec2f position,
                       robot2D::vec2f size,
                       Texture& texture,
+                      std::string text,
                       std::function<void(robot2D::ecs::Entity entity,
                                          std::uint64_t flags)>&& callback) {
         auto entity= scene.createEntity();
@@ -56,6 +59,11 @@ namespace robot2D {
         Bounds.lx = Bounds.lx - Bounds.width / 2;
         Bounds.ly = Bounds.ly - Bounds.height / 2;
         entity.getComponent<robot2D::UIHitbox>().m_area = Bounds;
+
+        auto& textComp = entity.addComponent<TextComponent>();
+        textComp.setText(std::move(text));
+
+        /// todo centerize text by default
 
         return entity;
     }

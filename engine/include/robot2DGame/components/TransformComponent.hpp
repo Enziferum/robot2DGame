@@ -12,6 +12,16 @@ namespace robot2D {
             return m_origin;
         }
 
+        void setSize(const robot2D::vec2f& size) override {
+            scale(size);
+            m_size = size;
+        }
+
+        void setSize(const float& x, const float& y) override {
+            scale({x, y});
+            m_size = {x, y};
+        }
+
         const vec2f& getSize() const {
             return m_size;
         }

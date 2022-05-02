@@ -125,7 +125,10 @@ else()
 endif()
 
 list(APPEND CMAKE_INCLUDE_PATH "${PROJECT_SOURCE_DIR}/extlibs/AL")
+list(APPEND CMAKE_INCLUDE_PATH "${PROJECT_SOURCE_DIR}/extlibs/minimp3")
 sfml_find_package(OpenAL INCLUDE "OPENAL_INCLUDE_DIR" LINK "OPENAL_LIBRARY")
+
+include_directories(${CMAKE_SOURCE_DIR}/extlibs/minimp3)
 
 set(LIBS)
 if(UNIX)
@@ -140,6 +143,7 @@ add_executable(${PROJECT_NAME} ${SRC})
 target_include_directories(${PROJECT_NAME} PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include>")
+
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBS} PRIVATE OpenAL)
 
 add_custom_command(

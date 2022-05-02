@@ -5,6 +5,9 @@ set(ENGINE_SRC
         ${INCLROOT}/Application.hpp
         ${INCLROOT}/State.hpp
         ${INCLROOT}/StateMachine.hpp
+        ${INCLROOT}/Font.hpp
+        ${INCLROOT}/QuadBatchRender.hpp
+        ${INCLROOT}/Text.hpp
 
         #components
         ${INCLROOT}/components/DrawableComponent.hpp
@@ -31,14 +34,18 @@ set(ENGINE_SRC ${ENGINE_SRC}
         ${SRCROOT}/Application.cpp
         ${SRCROOT}/State.cpp
         ${SRCROOT}/StateMachine.cpp
+        ${SRCROOT}/Font.cpp
+        ${SRCROOT}/Text.cpp
 
         #components
         ${SRCROOT}/components/DrawableComponent.cpp
+        ${SRCROOT}/components/TextComponent.cpp
 
         #systems
         ${SRCROOT}/systems/RenderSystem.cpp
         ${SRCROOT}/systems/UISystem.cpp
         ${SRCROOT}/systems/UIAnimationSystem.cpp
+        ${SRCROOT}/systems/TextSystem.cpp
 
         ${SRCROOT}/Api.cpp
 

@@ -54,7 +54,6 @@ void World::setupPlayer(InputParser& inputParser) {
 
     auto& playerComp = player.getComponent<PlayerComponent>();
 
-
     inputParser.setEntity(player);
 }
 
@@ -73,12 +72,6 @@ void World::setupMap() {
         entity.addComponent<robot2D::BroadPhaseComponent>().setArea(collider2D.shapes[0].aabb);
         entity.getComponent<robot2D::BroadPhaseComponent>().setFilterFlags(block.collisionShape.type);
     }
-
-//    auto ent = robot2D::createEntity(m_scene, {1054, 710}, {50, 50});
-//    ent.getComponent<robot2D::DrawableComponent>().setColor(robot2D::Color::Red);
-////
-//    auto ent1 = robot2D::createEntity(m_scene, {1023, 710}, {50, 50});
-//    ent1.getComponent<robot2D::DrawableComponent>().setColor(robot2D::Color::Yellow);
 }
 
 void World::handleMessages(const robot2D::Message& message) {

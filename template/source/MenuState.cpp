@@ -1,7 +1,10 @@
-#include <robot2DGame/Api.hpp>
+#include <robot2DGame/StateMachine.hpp>
+
 #include <robot2DGame/systems/UISystem.hpp>
 #include <robot2DGame/systems/RendererSystem.hpp>
-#include <robot2DGame/StateMachine.hpp>
+#include <robot2DGame/systems/TextSystem.hpp>
+
+#include <robot2DGame/Api.hpp>
 
 #include <game/MenuState.hpp>
 #include <game/States.hpp>
@@ -19,7 +22,10 @@ MenuState::MenuState(robot2D::IStateMachine& machine,
 void MenuState::setup() {
     m_scene.addSystem<robot2D::RenderSystem>(m_messageBus);
     m_scene.addSystem<robot2D::UISystem>(m_messageBus);
+    m_scene.addSystem<robot2D::TextSystem>(m_messageBus);
+
     m_textures.loadFromFile(ResourceID::Button, "res/textures/menu_button.png");
+    m_fonts.loadFromFile(ResourceID::Font, "res/font/game_font.ttf");
 
     auto windowSize = m_window -> getSize();
 
@@ -28,6 +34,7 @@ void MenuState::setup() {
                                                            windowSize.as<float>().y / 2},
                                                   buttonSize,
                                                   m_textures.get(ResourceID::Button),
+                                                  "Start",
                                                   BIND_BUTTON_CLASS_FN(MenuState::onStartButton));
 
     auto startPos = startButton.getComponent<robot2D::TransformComponent>().getPosition();
@@ -37,6 +44,7 @@ void MenuState::setup() {
                                                 endBtnPosition,
                                                 buttonSize,
                                                   m_textures.get(ResourceID::Button),
+                                                  "Stop",
                                                   BIND_BUTTON_CLASS_FN(MenuState::onEndButton));
 }
 

@@ -7,27 +7,45 @@
 
 namespace robot2D {
     RenderSystem::RenderSystem(robot2D::MessageBus& messageBus):
-            ecs::System(messageBus,typeid(RenderSystem)) {
+            ecs::System(messageBus,typeid(RenderSystem)),
+            m_needUpdateZBuffer{false} {
         addRequirement<TransformComponent>();
         addRequirement<DrawableComponent>();
     }
 
-    void RenderSystem::update(float dt) {}
+    void RenderSystem::update(float dt) {
+        (void)dt;
+
+        for(auto& it: m_entities) {
+            auto& drawable = it.getComponent<DrawableComponent>();
+            if(drawable.m_needUpdateZbuffer) {
+                m_needUpdateZBuffer = true;
+                drawable.m_needUpdateZbuffer = false;
+            }
+        }
+
+        if(m_needUpdateZBuffer) {
+            std::sort(m_entities.begin(), m_entities.end(),
+                      [](const ecs::Entity &left, const ecs::Entity &right) {
+                return left.getComponent<DrawableComponent>().getDepth() <
+                        right.getComponent<DrawableComponent>().getDepth();
+            });
+
+            m_needUpdateZBuffer = false;
+        }
+    }
 
     void RenderSystem::draw(RenderTarget& target, RenderStates states) const {
         for(auto& it: m_entities) {
             auto& transform = it.getComponent<TransformComponent>();
-            auto& sprite = it.getComponent<DrawableComponent>();
+            auto& drawable = it.getComponent<DrawableComponent>();
 
             auto t = transform.getTransform();
-            auto sz = transform.getSize();
-
-            t.scale(sz.x, sz.y);
 
             robot2D::RenderStates renderStates;
             renderStates.transform *= t;
-            renderStates.texture = &sprite.getTexture();
-            renderStates.color = sprite.getColor();
+            renderStates.texture = &drawable.getTexture();
+            renderStates.color = drawable.getColor();
 
             target.draw(renderStates);
         }

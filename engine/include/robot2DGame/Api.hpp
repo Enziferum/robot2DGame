@@ -25,6 +25,7 @@ namespace robot2D {
                                            robot2D::vec2f position,
                                            robot2D::vec2f size,
                                            robot2D::Texture& texture,
+                                           std::string text,
                                            std::function<void(robot2D::ecs::Entity entity,
                                                               std::uint64_t flags)>&& callback);
 }

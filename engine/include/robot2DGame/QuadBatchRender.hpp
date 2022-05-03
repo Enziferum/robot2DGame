@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <robot2D/Graphics/VertexArray.hpp>
 
 namespace robot2D {

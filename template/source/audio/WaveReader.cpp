@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "WaveReader.hpp"
 
 namespace robot2D {

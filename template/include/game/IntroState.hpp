@@ -3,6 +3,7 @@
 #include <robot2DGame/State.hpp>
 #include <robot2D/Ecs/Scene.hpp>
 #include <robot2D/Util/ResourceHandler.hpp>
+#include <robot2DGame/Font.hpp>
 
 enum class TextureID {
     Logo = 0
@@ -29,4 +30,5 @@ private:
 private:
     robot2D::ecs::Scene m_scene;
     robot2D::ResourceHandler<robot2D::Texture, TextureID> m_textures;
+    robot2D::Font m_font;
 };

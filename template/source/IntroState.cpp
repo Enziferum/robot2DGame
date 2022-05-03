@@ -1,7 +1,9 @@
 #include <robot2DGame/systems/RendererSystem.hpp>
-#include <robot2DGame/Api.hpp>
-#include <robot2DGame/components/UIAnimationComponent.hpp>
 #include <robot2DGame/systems/UIAnimationSystem.hpp>
+#include <robot2DGame/systems/TextSystem.hpp>
+
+#include <robot2DGame/components/UIAnimationComponent.hpp>
+#include <robot2DGame/Api.hpp>
 
 #include <game/IntroState.hpp>
 
@@ -19,6 +21,7 @@ IntroState::IntroState(robot2D::IStateMachine& machine,
 
 void IntroState::setup() {
     m_textures.loadFromFile(TextureID::Logo, "res/textures/logo.png");
+    m_font.loadFromFile("res/font/game_font.ttf");
     setupEcs();
 }
 
@@ -26,8 +29,9 @@ void IntroState::setupEcs() {
     auto windowSz = m_window -> getSize();
     m_scene.addSystem<robot2D::RenderSystem>(m_messageBus);
     m_scene.addSystem<robot2D::UIAnimationSystem>(m_messageBus);
+    m_scene.addSystem<robot2D::TextSystem>(m_messageBus);
 
-    robot2D::vec2f startSize = {};
+    robot2D::vec2f startSize = {100.F, 100.F};
 
     auto entity = robot2D::createEntity(m_scene,
                                         {windowSz.as<float>().x / 2.F,
@@ -39,6 +43,11 @@ void IntroState::setupEcs() {
     animation.duration = robot2D::seconds(animationDuration);
     animation.from = startSize;
     animation.to = animationTo;
+
+    auto textPos = entity.getComponent<robot2D::TransformComponent>().getPosition();
+    textPos.y += 200.F;
+
+    robot2D::createLabel(m_scene, textPos, "Robot2D Engine", m_font);
 }
 
 void IntroState::destroy() {}

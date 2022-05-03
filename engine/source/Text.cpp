@@ -102,7 +102,7 @@ namespace robot2D {
             m_scaled = false;
         }
 
-        const auto& glyphCharacters = m_font->getGlyphCharacters();
+        const auto& glyphCharacters = m_font -> getGlyphCharacters();
 
         quadBatchRender.refresh();
         robot2D::vec2f copyPos = m_pos;

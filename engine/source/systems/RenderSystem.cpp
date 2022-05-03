@@ -2,8 +2,11 @@
 #include <robot2D/Ecs/EntityManager.hpp>
 
 #include <robot2DGame/systems/RendererSystem.hpp>
+#include <robot2DGame/systems/TextSystem.hpp>
+
 #include <robot2DGame/components/DrawableComponent.hpp>
 #include <robot2DGame/components/TransformComponent.hpp>
+#include <robot2DGame/components/TextComponent.hpp>
 
 namespace robot2D {
     RenderSystem::RenderSystem(robot2D::MessageBus& messageBus):
@@ -46,8 +49,22 @@ namespace robot2D {
             renderStates.transform *= t;
             renderStates.texture = &drawable.getTexture();
             renderStates.color = drawable.getColor();
+            renderStates.layerID = drawable.getLayerIndex();
 
-            target.draw(renderStates);
+            if(getScene() -> hasSystem<TextSystem>() && it.hasComponent<TextComponent>()) {
+                auto textSystem = getScene() -> getSystem<TextSystem>();
+                auto vertexArray =  textSystem -> getVertexArray();
+                renderStates.shader = const_cast<robot2D::ShaderHandler*>(&textSystem -> getShader());
+                renderStates.shader -> use();
+                auto view = target.getView(drawable.getLayerIndex()).getTransform().get_matrix();
+                renderStates.shader -> set("projection",
+                                           view);
+                renderStates.shader -> unUse();
+                renderStates.renderInfo.indexCount = textSystem -> getIndexCount();
+                target.draw(vertexArray, renderStates);
+            }
+            else
+                target.draw(renderStates);
         }
     }
 }

@@ -35,6 +35,7 @@ void MenuState::setup() {
                                                   buttonSize,
                                                   m_textures.get(ResourceID::Button),
                                                   "Start",
+                                                  m_fonts.get(ResourceID::Font),
                                                   BIND_BUTTON_CLASS_FN(MenuState::onStartButton));
 
     auto startPos = startButton.getComponent<robot2D::TransformComponent>().getPosition();
@@ -45,6 +46,7 @@ void MenuState::setup() {
                                                 buttonSize,
                                                   m_textures.get(ResourceID::Button),
                                                   "Stop",
+                                                  m_fonts.get(ResourceID::Font),
                                                   BIND_BUTTON_CLASS_FN(MenuState::onEndButton));
 }
 

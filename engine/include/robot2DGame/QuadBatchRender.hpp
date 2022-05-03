@@ -36,8 +36,9 @@ namespace robot2D {
         /// UnBind internal VertexArray
         void unBind();
 
-        int getIndexCount();
+        int getIndexCount() const;
 
+        robot2D::VertexArray::Ptr getVertexArray() const { return m_vertexArray; }
     private:
         const int quadSize = 4;
         const int quadIndicesSize = 6;
@@ -52,7 +53,7 @@ namespace robot2D {
         robot2D::VertexArray::Ptr m_vertexArray;
         robot2D::VertexBuffer::Ptr m_vertexBuffer;
         BatchVertex* batchHead;
-        BatchVertex* batchElement;
+        mutable BatchVertex* batchElement;
     };
 
     template<typename BatchVertex>
@@ -121,7 +122,7 @@ namespace robot2D {
     }
 
     template<typename BatchVertex>
-    int QuadBatchRender<BatchVertex>::getIndexCount() {
+    int QuadBatchRender<BatchVertex>::getIndexCount() const {
         return indexCount;
     }
 

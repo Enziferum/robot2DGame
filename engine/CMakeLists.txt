@@ -40,6 +40,7 @@ set(ENGINE_SRC ${ENGINE_SRC}
         #components
         ${SRCROOT}/components/DrawableComponent.cpp
         ${SRCROOT}/components/TextComponent.cpp
+        ${SRCROOT}/components/TransformComponent.cpp
 
         #systems
         ${SRCROOT}/systems/RenderSystem.cpp

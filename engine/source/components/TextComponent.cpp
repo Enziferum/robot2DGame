@@ -5,14 +5,16 @@ namespace robot2D {
     m_text{""},
     m_characterSize{20},
     m_font{nullptr},
-    m_color{robot2D::Color::White} {}
+    m_needUpdate{false}{}
 
     void robot2D::TextComponent::setText(const std::string& text) {
         m_text = text;
+        m_needUpdate = true;
     }
 
     void robot2D::TextComponent::setText(std::string&& text) {
         m_text = std::move(text);
+        m_needUpdate = true;
     }
 
     std::string& robot2D::TextComponent::getText() {
@@ -25,6 +27,7 @@ namespace robot2D {
 
     void robot2D::TextComponent::setCharacterSize(unsigned int value) {
         m_characterSize = value;
+        m_needUpdate = true;
     }
 
     unsigned int robot2D::TextComponent::getCharacterSize() {
@@ -39,15 +42,15 @@ namespace robot2D {
         return m_font;
     }
 
-    void robot2D::TextComponent::setColor(const Color &color) {
-        m_color = color;
+    const robot2D::Texture& TextComponent::getTexture() const {
+        return *(std::move(m_font -> getTextures()[0]));
     }
 
-    Color& robot2D::TextComponent::getColor() {
-        return m_color;
-    }
-
-    const Color& robot2D::TextComponent::getColor() const {
-        return m_color;
+    std::unordered_map<int, GlyphQuad>& TextComponent::getGlyphCache() {
+        if (m_bufferCache.empty() || m_scaled) {
+            m_bufferCache = m_font -> getBufferCache(1.F);
+            m_scaled = false;
+        }
+        return m_bufferCache;
     }
 }

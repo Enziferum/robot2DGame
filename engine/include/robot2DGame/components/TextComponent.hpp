@@ -23,14 +23,16 @@ namespace robot2D {
         void setFont(const Font& font);
         const Font* getFont() const;
 
-        void setColor(const Color& color);
-        Color& getColor();
-        const Color& getColor() const;
+        const robot2D::Texture& getTexture() const;
+        std::unordered_map<int, GlyphQuad>& getGlyphCache();
     private:
         std::string m_text;
         unsigned int m_characterSize;
         const Font* m_font;
+        bool m_needUpdate;
+        std::unordered_map<int, GlyphQuad> m_bufferCache;
         friend class TextSystem;
-        robot2D::Color m_color;
+
+        bool m_scaled = false;
     };
 }

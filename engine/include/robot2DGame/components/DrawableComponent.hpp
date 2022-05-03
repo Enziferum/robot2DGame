@@ -21,11 +21,15 @@ namespace robot2D {
 
         inline void setDepth(int value);
         inline int getDepth() const;
+
+        inline void setLayerIndex(unsigned int value);
+        inline unsigned int getLayerIndex() const;
     private:
         const robot2D::Texture* m_texture;
         robot2D::Color m_color;
 
         int m_depth;
+        unsigned int m_layerIndex;
         /// emulate layers and make possible set when render
         bool m_needUpdateZbuffer;
 
@@ -39,5 +43,13 @@ namespace robot2D {
 
     inline int DrawableComponent::getDepth() const {
         return m_depth;
+    }
+
+    inline void DrawableComponent::setLayerIndex(unsigned int value) {
+        m_layerIndex = value;
+    }
+
+    inline unsigned int DrawableComponent::getLayerIndex() const {
+        return m_layerIndex;
     }
 }

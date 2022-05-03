@@ -39,7 +39,7 @@ namespace robot2D {
         void clear() override;
 
         void handleEvent(const Event& event);
-        void handleMessages(const Message& event);
+        void handleMessages(const Message& message);
         void update(float dt);
         void render();
     private:

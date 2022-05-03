@@ -9,7 +9,9 @@ namespace robot2D {
     GameApplication::~GameApplication() {}
 
     void GameApplication::handleMessages() {
-        /// Default No - op
+        robot2D::Message message{};
+        while (m_bus.pollMessages(message))
+            m_machine.handleMessages(message);
     }
 
     void GameApplication::setup() {

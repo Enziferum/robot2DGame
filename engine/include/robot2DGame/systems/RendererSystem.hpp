@@ -1,6 +1,7 @@
 #pragma once
 
 #include <robot2D/Ecs/System.hpp>
+#include <robot2D/Ecs/Scene.hpp>
 #include <robot2D/Graphics/Drawable.hpp>
 
 namespace robot2D {

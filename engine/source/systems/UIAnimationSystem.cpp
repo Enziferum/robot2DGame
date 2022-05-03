@@ -18,7 +18,7 @@ namespace robot2D {
             auto& animation = it.getComponent<UIAnimationComponent>();
             auto& transform = it.getComponent<TransformComponent>();
 
-            if(animation.duration.asMicroSeconds() > 0) {;
+            if(animation.duration.asMicroSeconds() > 0) {
                 auto t = seconds(dt);
                 if(animation.type == UIAnimationComponent::AnimationType::Scale) {
                     transform.setSize(animation.getValue(dt));

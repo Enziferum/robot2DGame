@@ -13,7 +13,7 @@ namespace robot2D {
         virtual void setup();
     protected:
         virtual void handleEvents(const robot2D::Event& event) = 0;
-        void handleMessages();
+        virtual void handleMessages() override;
         virtual void update(float dt) = 0;
         virtual void render() = 0;
 

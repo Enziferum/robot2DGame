@@ -13,18 +13,16 @@
 
 namespace
 {
-    const float Gravity = 5999.9f;
-    const float JumpImpulse = 1480.f;
-    const float TerminalVelocity = 12000.f;
+    const float Gravity = 5999.9f / 3.F;
+    const float JumpImpulse = 1480.f / 3.F;
+    const float TerminalVelocity = 800.f;
 }
-
 
 struct Manifold final
 {
     robot2D::vec2f normal;
     float penetration = 0.f;
 };
-
 
 robot2D::FloatRect boundsToWorldSpace(robot2D::FloatRect bounds,
                                       const robot2D::TransformComponent& tx) {
@@ -33,7 +31,7 @@ robot2D::FloatRect boundsToWorldSpace(robot2D::FloatRect bounds,
     bounds.lx += tx.getOrigin().x * scale.x;
     bounds.width *= scale.x;
     bounds.ly *= scale.y;
-    bounds.ly *= tx.getOrigin().y * scale.y;
+    bounds.ly += tx.getOrigin().y * scale.y;
     bounds.height *= scale.y;
     bounds.lx += tx.getWorldPosition().x;
     bounds.ly += tx.getWorldPosition().y;
@@ -64,12 +62,10 @@ bool intersectsAABB(robot2D::FloatRect a, robot2D::FloatRect b, Manifold& manifo
     return true;
 }
 
-
 static inline float dot(const robot2D::vec2f& lv, const robot2D::vec2f& rv)
 {
     return lv.x * rv.x + lv.y * rv.y;
 }
-
 
 ////////////////////////////////////////////////////////////
 template <typename T>
@@ -90,6 +86,7 @@ robot2D::ecs::System(messageBus, typeid(DummyPlayerSystem)) {
 }
 
 void DummyPlayerSystem::update(float dt)  {
+
     for(auto& it: m_entities) {
         auto player = it.getComponent<PlayerComponent>();
 
@@ -104,6 +101,7 @@ void DummyPlayerSystem::update(float dt)  {
                 break;
         }
     }
+
 }
 
 void DummyPlayerSystem::processFalling(robot2D::ecs::Entity entity, float dt) {
@@ -112,23 +110,21 @@ void DummyPlayerSystem::processFalling(robot2D::ecs::Entity entity, float dt) {
     auto scale = tx.getScale();
     const auto& collision = entity.getComponent<Collider2D>();
 
-    //&& (collision.collisionFlags & CollisionShape::LeftHand) == 0
     if ((player.input & InputFlag::Left)
-        )
+        && (collision.collisionFlags & CollisionShape::LeftHand) == 0)
     {
         player.velocity.x -= PlayerComponent::Acceleration * player.accelerationMultiplier;
-        scale.x = -scale.y;
+        //scale.x = -scale.y;
     }
 
-    //&& (collision.collisionFlags & CollisionShape::RightHand) == 0
     if ((player.input & InputFlag::Right)
-        )
+        && (collision.collisionFlags & CollisionShape::RightHand) == 0)
     {
         player.velocity.x += PlayerComponent::Acceleration * player.accelerationMultiplier;
 
         if ((player.input & InputFlag::Left) == 0)
         {
-            scale.x = scale.y;
+           // scale.x = scale.y;
         }
     }
     tx.setScale(scale);
@@ -136,7 +132,7 @@ void DummyPlayerSystem::processFalling(robot2D::ecs::Entity entity, float dt) {
     if((player.prevInput & InputFlag::Jump)
        && (player.input & InputFlag::Jump) == 0)
     {
-        player.velocity.y *= 0.3f;
+        player.velocity.y *= 0.15F;
     }
 
     if ((player.input & InputFlag::Shoot)
@@ -170,7 +166,7 @@ void DummyPlayerSystem::processRunning(robot2D::ecs::Entity entity, float dt) {
     if ((player.input & InputFlag::Left))
     {
         player.velocity.x -= PlayerComponent::Acceleration * player.accelerationMultiplier;
-        scale.x = -scale.y;
+       // scale.x = -scale.y;
     }
 
     if ((player.input & InputFlag::Right))
@@ -179,7 +175,7 @@ void DummyPlayerSystem::processRunning(robot2D::ecs::Entity entity, float dt) {
 
         if ((player.input & InputFlag::Left) == 0)
         {
-            scale.x = scale.y;
+          //   scale.x = scale.y;
         }
     }
 
@@ -201,6 +197,12 @@ void DummyPlayerSystem::processRunning(robot2D::ecs::Entity entity, float dt) {
 
     applyVelocity(entity, dt);
     doCollision(entity, true);
+
+    auto flags = entity.getComponent<Collider2D>().collisionFlags;
+    if((flags & CollisionShape::Foot) == 0) {
+        player.state = PlayerComponent::Falling;
+    }
+
 }
 
 void DummyPlayerSystem::applyVelocity(robot2D::ecs::Entity entity, float dt)

@@ -18,5 +18,4 @@ namespace robot2D {
         bool m_needUpdateZBuffer;
     };
 
-
 }

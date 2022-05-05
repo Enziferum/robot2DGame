@@ -12,8 +12,19 @@ namespace robot2D {
         void addChild(TransformComponent& );
         void removeChild(TransformComponent& );
 
+        void setOrigin(const robot2D::vec2f& origin) override {
+            if(origin.x > 1.F && origin.y > 1.F) {
+                auto rect = getLocalBounds();
+                m_origin.x = origin.x / rect.width;
+                m_origin.y = origin.y / rect.width;
+                m_transformedOrigin = origin;
+            } else
+                m_origin = origin;
+            m_update_transform = true;
+        }
+
         const vec2f& getOrigin() const {
-            return m_origin;
+            return m_transformedOrigin;
         }
 
         void setSize(const robot2D::vec2f& size) override {
@@ -64,13 +75,16 @@ namespace robot2D {
             float h = abs(m_size.y);
             return {0, 0, w, h};
         }
+
         FloatRect getGlobalBounds() {
             return getTransform().transformRect(getLocalBounds());
         }
+
         FloatRect getGlobalBounds(const FloatRect& otherBounds) {
             return getTransform().transformRect(otherBounds);
         }
     private:
+        robot2D::vec2f m_transformedOrigin;
         TransformComponent* m_parent;
         std::vector<TransformComponent*> m_children;
     };

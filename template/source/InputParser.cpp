@@ -6,6 +6,8 @@ InputParser::InputParser():
 m_inputBinding{} {}
 
 void InputParser::handleEvent(const robot2D::Event& evt) {
+    if(!enabled)
+        return;
     if (evt.type == robot2D::Event::KeyPressed)
     {
         if (evt.key.code == m_inputBinding.keys[InputBinding::Jump])
@@ -47,6 +49,8 @@ void InputParser::handleEvent(const robot2D::Event& evt) {
 }
 
 void InputParser::update() {
+    if(!enabled)
+        return;
     auto& player = m_playerEntity.getComponent<PlayerComponent>();
 
     //update player input history
@@ -62,5 +66,7 @@ void InputParser::update() {
 }
 
 void InputParser::setEntity(robot2D::ecs::Entity entity) {
-   m_playerEntity = entity;
+    if(!entity.hasComponent<PlayerComponent>())
+        return;
+    m_playerEntity = entity;
 }

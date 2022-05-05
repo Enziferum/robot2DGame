@@ -12,7 +12,7 @@ namespace {
         robot2D::vec2f size;
     };
 
-    std::array<SampleWall, 4> g_walls;
+    std::array<SampleWall, 5> g_walls;
 }
 
 Map::Map(): m_mapblocks{} {}
@@ -24,6 +24,11 @@ void Map::sampleMap() {
                    {windowSize.x, wallSize}};
     g_walls[3] = { {windowSize.x + offset.x, offset.y},
                    {wallSize, windowSize.y + wallSize}};
+
+    g_walls[4] = { {windowSize.x, windowSize.y + 100.F},
+                   {200.F, wallSize}};
+//    g_walls[5] = { {windowSize.x + offset.x, offset.y},
+//                   {wallSize, wallSize}};
 }
 
 bool Map::loadFromFile(const std::string& path) {
@@ -35,7 +40,8 @@ bool Map::loadFromFile(const std::string& path) {
         collisionShape.shape = CollisionShape::Rectangle;
         collisionShape.aabb = {0, 0, wall.size.x, wall.size.y};
         collisionShape.type = CollisionShape::Solid;
-        collisionShape.collisionFlags = CollisionShape::Player | CollisionShape::Foot;
+        collisionShape.collisionFlags = CollisionShape::Player | CollisionShape::Foot | CollisionShape::LeftHand
+                | CollisionShape::RightHand;
 
         MapBlock block;
         block.collisionShape = collisionShape;

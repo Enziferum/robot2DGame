@@ -27,4 +27,5 @@ private:
     robot2D::MessageBus& m_bus;
     robot2D::ecs::Scene m_scene;
     Map m_map;
+    robot2D::Texture m_texture;
 };

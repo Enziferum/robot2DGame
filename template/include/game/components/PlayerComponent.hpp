@@ -22,7 +22,7 @@ struct PlayerComponent final {
         Dying, Dead
     }state = Running;
 
-    static constexpr float Acceleration = 120.f;
+    static constexpr float Acceleration = 40.f;
     static constexpr float Drag = 0.81f;
 
     robot2D::vec2f velocity;

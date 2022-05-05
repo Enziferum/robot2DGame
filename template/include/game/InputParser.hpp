@@ -15,6 +15,8 @@ public:
 
     void handleEvent(const robot2D::Event& event);
     void update();
+
+    bool enabled = true;
 private:
     InputBinding m_inputBinding;
     robot2D::ecs::Entity m_playerEntity;

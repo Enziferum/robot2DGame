@@ -2,8 +2,10 @@
 #include <game/components/Collision.hpp>
 
 namespace {
-    constexpr robot2D::vec2f windowSize = {800.F, 600.F};
-    constexpr robot2D::vec2f offset = {240.F, 160.F};
+//    constexpr robot2D::vec2f windowSize = {800.F, 600.F};
+//    constexpr robot2D::vec2f offset = {240.F, 160.F};
+    constexpr robot2D::vec2f windowSize = {640.F, 480.F};
+    constexpr robot2D::vec2f offset = {100.F, 100.F};
 
     constexpr float wallSize = 10.F;
 
@@ -12,7 +14,7 @@ namespace {
         robot2D::vec2f size;
     };
 
-    std::array<SampleWall, 5> g_walls;
+    std::array<SampleWall, 4> g_walls;
 }
 
 Map::Map(): m_mapblocks{} {}
@@ -24,11 +26,6 @@ void Map::sampleMap() {
                    {windowSize.x, wallSize}};
     g_walls[3] = { {windowSize.x + offset.x, offset.y},
                    {wallSize, windowSize.y + wallSize}};
-
-    g_walls[4] = { {windowSize.x, windowSize.y + 100.F},
-                   {200.F, wallSize}};
-//    g_walls[5] = { {windowSize.x + offset.x, offset.y},
-//                   {wallSize, wallSize}};
 }
 
 bool Map::loadFromFile(const std::string& path) {

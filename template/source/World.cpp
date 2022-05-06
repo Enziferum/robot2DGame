@@ -55,7 +55,6 @@ robot2D::Rect<T> combine(robot2D::Rect<T> a, robot2D::Rect<T> b)
 }
 
 void World::setupPlayer(InputParser& inputParser) {
-    m_texture.loadFromFile("res/textures/block.png");
     auto player = robot2D::createEntity(m_scene,
                                         startPos,
                                         playerSize);
@@ -100,19 +99,6 @@ void World::setupPlayer(InputParser& inputParser) {
 
 void World::setupMap() {
     m_map.loadFromFile("res/map/1.map");
-
-
-    auto ent = robot2D::createEntity(m_scene,
-                                        {},
-                                        {100.F, 100.F});
-    ent.getComponent<robot2D::DrawableComponent>().setDepth(0);
-
-    auto entity = robot2D::createEntity(m_scene,
-                                        {100.F, 100.F},
-                                        {100.F, 100.F});
-    entity.getComponent<robot2D::DrawableComponent>().setColor(robot2D::Color::Red);
-    entity.getComponent<robot2D::TransformComponent>().setOrigin({50.F, 50.F});
-
 
     for(const auto& block: m_map.getBlocks()) {
         auto entity = robot2D::createEntity(m_scene,

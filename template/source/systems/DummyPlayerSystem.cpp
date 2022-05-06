@@ -90,6 +90,10 @@ void DummyPlayerSystem::update(float dt)  {
     for(auto& it: m_entities) {
         auto player = it.getComponent<PlayerComponent>();
 
+        auto& tx = it.getComponent<robot2D::TransformComponent>();
+        if(tx.getWorldPosition().y >= 610.F)
+            tx.setPosition({400.F, 300.F});
+
         switch(player.state) {
             default:
                 break;

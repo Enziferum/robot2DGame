@@ -94,10 +94,11 @@ namespace robot2D {
         auto entity= scene.createEntity();
         auto& transform = entity.addComponent<robot2D::TransformComponent>();
         transform.setPosition(position);
-        transform.setSize(size);
+        transform.setSizeScale(size);
 
         auto& drawable = entity.addComponent<robot2D::DrawableComponent>();
         drawable.setTexture(texture);
+        drawable.setDepth(-1);
 
         entity.addComponent<robot2D::UIHitbox>().callbackIDs[robot2D::UIHitbox::CallbackID::MouseDown] =
                 scene.getSystem<robot2D::UISystem>()
@@ -108,20 +109,15 @@ namespace robot2D {
         Bounds.ly = Bounds.ly - Bounds.height / 2;
         entity.getComponent<robot2D::UIHitbox>().m_area = Bounds;
 
+        //transform.setSizeScale(size);
+
         /// todo create label as child
         auto localBounds = entity.getComponent<robot2D::TransformComponent>().getLocalBounds();
-
-//        {
-//            transform.getPosition().x + localBounds.width / 2.F,
-//            transform.getPosition().y + localBounds.height / 2.F
-//        }
 
         auto childLabel = createLabel(scene,{transform.getPosition().x - 10.F,
                                              transform.getPosition().y - 10.F},
                                       std::move(text),
                                       font);
-//        entity.getComponent<robot2D::TransformComponent>()
-//                .addChild(childLabel.getComponent<robot2D::TransformComponent>());
 
         return entity;
     }

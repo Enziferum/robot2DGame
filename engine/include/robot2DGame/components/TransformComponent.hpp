@@ -27,7 +27,8 @@ namespace robot2D {
             return m_transformedOrigin;
         }
 
-        void setSize(const robot2D::vec2f& size) override {
+        void setSize(const robot2D::vec2f &size) override {
+            //m_size = size;
             if(m_size == robot2D::vec2f{}) {
                 scale(size);
             } else {
@@ -38,15 +39,47 @@ namespace robot2D {
                 float maxY = std::max(m_size.y, size.y);
                 float minY = std::min(m_size.y, size.y);
 
-                scaleX = maxX / minX;
-                scaleY = maxY / minY;
+                if(m_size != size) {
+                    scaleX = maxX / minX;
+                    scaleY = maxY / minY;
+                }
+                else {
+                    scaleX = size.x;
+                    scaleY = size.y;
+                }
                 scale({scaleX, scaleY});
             }
             m_size = size;
         }
+
+        void setSizeScale(const robot2D::vec2f& size) {
+            if(m_size == robot2D::vec2f{}) {
+                scale(size);
+            } else {
+                float scaleX = 0.F;
+                float scaleY = 0.F;
+                float maxX = std::max(m_size.x, size.x);
+                float minX = std::min(m_size.x, size.x);
+                float maxY = std::max(m_size.y, size.y);
+                float minY = std::min(m_size.y, size.y);
+
+                if(m_size != size) {
+                    scaleX = maxX / minX;
+                    scaleY = maxY / minY;
+                }
+                else {
+                    scaleX = size.x;
+                    scaleY = size.y;
+                }
+                scale({scaleX, scaleY});
+            }
+            m_size = size;
+        }
+
         void setSize(const float& x, const float& y) override {
             setSize({x, y});
         }
+
         const vec2f& getSize() const {
             return m_size;
         }

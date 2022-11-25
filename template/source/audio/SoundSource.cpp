@@ -1,3 +1,4 @@
+#include <cassert>
 #include "ALHelpers.hpp"
 #include "SoundSource.hpp"
 
@@ -18,13 +19,15 @@ namespace robot2D {
     }
 
     void SoundSource::setVolume(float volume) {
+        assert((volume >= 0.F && volume <= 100.F));
+        if(volume > 1.0F)
+            volume /= 100.F;
         alCall(alSourcef, ALSource, AL_GAIN, volume);
     }
 
     float SoundSource::getVolume() const {
         float gain = 0.F;
         alCall(alGetSourcef, ALSource, AL_GAIN, &gain);
-        // gain from 0 to 1
         return gain * 100.F;
     }
 

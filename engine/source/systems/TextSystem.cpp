@@ -119,6 +119,4 @@ namespace robot2D {
             m_needUpdate = false;
         }
     }
-
-
 }

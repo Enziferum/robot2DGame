@@ -10,7 +10,7 @@ public:
     void setup() override;
 
 protected:
-    void handleEvents(const robot2D::Event &event) override;
+    void handleEvents(const robot2D::Event& event) override;
     void update(float dt) override;
     void render() override;
 private:

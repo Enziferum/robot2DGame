@@ -57,8 +57,8 @@ namespace robot2D {
                 renderStates.shader = const_cast<robot2D::ShaderHandler*>(&textSystem -> getShader());
                 renderStates.shader -> use();
                 auto view = target.getView(drawable.getLayerIndex()).getTransform().get_matrix();
-                renderStates.shader -> set("projection",
-                                           view);
+                renderStates.shader -> setMatrix("projection",
+                                                 const_cast<float *>(view));
                 renderStates.shader -> unUse();
                 renderStates.renderInfo.indexCount = textSystem -> getIndexCount();
                 target.draw(vertexArray, renderStates);

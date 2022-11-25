@@ -27,11 +27,11 @@ struct Quad: public robot2D::Drawable {
     void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override {
         robot2D::Transform transform;
         transform.translate(position);
-        transform.scale(size);
+       // transform.scale(size);
 
         states.transform *= transform;
         states.color = color;
-        states.texture = texture;
+       // states.texture = texture;
         target.draw(states);
     }
 };
@@ -324,7 +324,7 @@ void GameState::handleEvents(const robot2D::Event& event) {
     }
 
     if(event.type == robot2D::Event::KeyPressed) {
-        if(event.key.code == robot2D::Key::W)
+        if(event.key.code == robot2D::Key::I)
             saveMap(mapPath, editor.getBlocks());
         if(event.key.code == robot2D::Key::O) {
             std::vector<Quad> blocks;

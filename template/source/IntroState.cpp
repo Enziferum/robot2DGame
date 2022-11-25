@@ -4,8 +4,9 @@
 
 #include <robot2DGame/components/UIAnimationComponent.hpp>
 #include <robot2DGame/Api.hpp>
-
+#include <robot2DGame/StateMachine.hpp>
 #include <game/IntroState.hpp>
+#include <game/States.hpp>
 
 namespace {
     constexpr float animationDuration = 2.F;
@@ -43,7 +44,10 @@ void IntroState::setupEcs() {
     animation.duration = robot2D::seconds(animationDuration);
     animation.from = startSize;
     animation.to = animationTo;
-
+    animation.animationCallback = [this] {
+        m_machine.pop();
+        m_machine.pushState(static_cast<uint32_t>(States::Menu));
+    };
     auto textPos = entity.getComponent<robot2D::TransformComponent>().getPosition();
     textPos.y += 200.F;
 

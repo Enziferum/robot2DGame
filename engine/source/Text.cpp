@@ -159,7 +159,7 @@ namespace robot2D {
 
     void Text::draw(RenderTarget& target, RenderStates states) const {
         m_textShader.use();
-        m_textShader.set("projection", target.getView().getTransform().get_matrix());
+        m_textShader.setMatrix("projection", const_cast<float *>(target.getView().getTransform().get_matrix()));
 
         if (m_needupdate)
             beforeRender();

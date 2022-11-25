@@ -1,5 +1,5 @@
 #include <game/MyApplication.hpp>
-#include <iostream>
+
 #include <game/States.hpp>
 #include <game/IntroState.hpp>
 #include <game/MenuState.hpp>
@@ -16,10 +16,12 @@ void MyApplication::setup() {
 
 void MyApplication::registerStates() {
     /// Register Your States Here
-//
+
+    m_machine.registerState<IntroState>(static_cast<robot2D::StateID>(States::Intro));
+    m_machine.registerState<MenuState>(static_cast<robot2D::StateID>(States::Menu));
     m_machine.registerState<GameState>(static_cast<robot2D::StateID>(States::Game));
 
-    m_machine.pushState(static_cast<robot2D::StateID>(States::Game));
+    m_machine.pushState(static_cast<robot2D::StateID>(States::Intro));
 }
 
 void MyApplication::handleEvents(const robot2D::Event& event) {
@@ -29,6 +31,21 @@ void MyApplication::handleEvents(const robot2D::Event& event) {
 void MyApplication::update(float dt) {
     m_machine.update(dt);
 }
+
+struct Quad1: robot2D::Drawable, robot2D::Transformable {
+    robot2D::Texture* texture = nullptr;
+    robot2D::Color color = robot2D::Color::White;
+
+    void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override {
+        auto t =  getTransform();
+        states.transform *= t;
+        states.texture = texture;
+        states.color = color;
+        target.draw(states);
+    }
+};
+
+
 
 void MyApplication::render() {
     m_window -> clear();

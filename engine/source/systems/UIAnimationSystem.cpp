@@ -21,9 +21,11 @@ namespace robot2D {
             if(animation.duration.asMicroSeconds() > 0) {
                 auto t = seconds(dt);
                 if(animation.type == UIAnimationComponent::AnimationType::Scale) {
-                    transform.setSize(animation.getValue(dt));
+                    transform.setSizeScale(animation.getValue(dt));
                 }
                 animation.duration -= t;
+            } else {
+                animation.onCallback();
             }
         }
     }

@@ -22,6 +22,17 @@ namespace robot2D {
         UIAnimationComponent() = default;
         ~UIAnimationComponent() = default;
 
+        AnimationCallback animationCallback;
+
+        bool used = false;
+
+        void onCallback() {
+            if(!used && animationCallback) {
+                used = true;
+                animationCallback();
+            }
+        }
+
         robot2D::vec2f getValue(float dt) {
             if(once) {
                 // one

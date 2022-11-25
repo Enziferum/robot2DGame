@@ -71,6 +71,8 @@ namespace robot2D {
 
     template<typename T, typename... Args>
     void StateMachine::registerState(const StateID& id, Args &&... args) {
+        if(m_factories.find(id) != m_factories.end())
+            return;
         m_factories[id] = [this, &args...]() {
             return std::make_unique<T>(*this, *m_context, m_bus, std::forward<Args>(args)...);
         };

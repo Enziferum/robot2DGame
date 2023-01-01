@@ -8,8 +8,8 @@
 #include <game/components/PlayerComponent.hpp>
 #include <game/components/Collision.hpp>
 
-#include "systems/DynamicTreeSystem.hpp"
 #include <game/Messages.hpp>
+#include "systems/DynamicTreeSystem.hpp"
 
 namespace {
     constexpr robot2D::vec2f startPos = {615.F, 435.F};
@@ -91,7 +91,9 @@ void World::setupPlayer(InputParser& inputParser) {
 
     player.addComponent<robot2D::BroadPhaseComponent>().setArea(aabb);
     player.getComponent<robot2D::BroadPhaseComponent>().setFilterFlags(
-            CollisionShape::Player | CollisionShape::Foot | CollisionShape::LeftHand | CollisionShape::RightHand);
+            CollisionShape::Player | CollisionShape::Foot |
+            CollisionShape::LeftHand | CollisionShape::RightHand
+    );
 
 
     inputParser.setEntity(player);

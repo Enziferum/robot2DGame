@@ -7,8 +7,12 @@
 #include <robot2DGame/State.hpp>
 #include <robot2DGame/Font.hpp>
 
+#include <robot2DGame/experimental/audio/Audio.hpp>
+
 enum class ResourceID {
     Button,
+    Background,
+    Cloud,
     Font
 };
 
@@ -30,8 +34,13 @@ public:
 private:
     void onStartButton(robot2D::ecs::Entity entity, uint64_t flags);
     void onEndButton(robot2D::ecs::Entity entity, uint64_t flags);
+    void setupClouds();
 private:
     robot2D::ecs::Scene m_scene;
     robot2D::ResourceHandler<robot2D::Texture, ResourceID> m_textures;
     robot2D::ResourceHandler<robot2D::Font, ResourceID> m_fonts;
+
+    robot2D::Music m_music;
+    robot2D::SoundBuffer m_soundBuffer;
+    robot2D::Sound sound;
 };

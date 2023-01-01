@@ -4,12 +4,11 @@
 #include <game/systems/DummyPlayerSystem.hpp>
 #include <game/components/PlayerComponent.hpp>
 #include <game/components/Collision.hpp>
+
 #include <game/InputParser.hpp>
 #include <game/Messages.hpp>
 
 #include "DynamicTreeSystem.hpp"
-
-#include <iostream>
 
 namespace
 {
@@ -40,12 +39,17 @@ robot2D::FloatRect boundsToWorldSpace(robot2D::FloatRect bounds,
 
 bool intersectsAABB(robot2D::FloatRect a, robot2D::FloatRect b, Manifold& manifold)
 {
+    // a = 267.72 580.64 12 10
+    // b = 100 580 640 10
     robot2D::FloatRect overlap;
     if(!a.intersects(b, overlap))
         return false;
 
+    // 272.72, 585.64
     robot2D::vec2f centreA(a.lx + (a.width / 2.f), a.ly + (a.height / 2.f));
+    // 420, 585
     robot2D::vec2f centreB(b.lx + (b.width / 2.f), b.ly + (b.height / 2.f));
+    // 147,28 -0.64
     robot2D::vec2f collisionNormal = centreB - centreA;
 
     if (overlap.width < overlap.height)
@@ -55,7 +59,7 @@ bool intersectsAABB(robot2D::FloatRect a, robot2D::FloatRect b, Manifold& manifo
     }
     else
     {
-        manifold.normal.y = (collisionNormal.y < 0) ? 1.f : -1.f;
+        manifold.normal.y = (collisionNormal.y < 0 && (centreB.y > centreA.y)) ? 1.f : -1.f;
         manifold.penetration = overlap.height;
     }
 
@@ -89,10 +93,7 @@ void DummyPlayerSystem::update(float dt)  {
 
     for(auto& it: m_entities) {
         auto player = it.getComponent<PlayerComponent>();
-
         auto& tx = it.getComponent<robot2D::TransformComponent>();
-        if(tx.getWorldPosition().y >= 610.F)
-            tx.setPosition({400.F, 300.F});
 
         switch(player.state) {
             default:
@@ -118,7 +119,7 @@ void DummyPlayerSystem::processFalling(robot2D::ecs::Entity entity, float dt) {
         && (collision.collisionFlags & CollisionShape::LeftHand) == 0)
     {
         player.velocity.x -= PlayerComponent::Acceleration * player.accelerationMultiplier;
-        //scale.x = -scale.y;
+     //   scale.x = -scale.y;
     }
 
     if ((player.input & InputFlag::Right)
@@ -128,7 +129,7 @@ void DummyPlayerSystem::processFalling(robot2D::ecs::Entity entity, float dt) {
 
         if ((player.input & InputFlag::Left) == 0)
         {
-           // scale.x = scale.y;
+          //  scale.x = scale.y;
         }
     }
     tx.setScale(scale);
@@ -267,7 +268,7 @@ void DummyPlayerSystem::resolveCollision(robot2D::ecs::Entity entity,
                 case CollisionShape::Solid:
                     tx.move(manifold.normal * manifold.penetration);
 
-                    if (manifold.normal.y != 0) {
+                  if (manifold.normal.y != 0) {
                         player.velocity = {};
                     } else {
                         player.velocity = reflect(player.velocity, manifold.normal);

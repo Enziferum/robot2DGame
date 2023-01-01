@@ -22,7 +22,9 @@ namespace robot2D {
 
         void setPosition(const robot2D::vec2f& position);
         void setPosition(float posX, float posY);
-        const robot2D::vec2f& getPosition() const;
+        const robot2D::vec2f& getPosition() const {
+            return m_pos;
+        }
 
         void setScale(const float& scale);
         const float& getScale() const;
@@ -45,7 +47,7 @@ namespace robot2D {
         const Font* m_font;
         std::string m_text;
 
-        robot2D::ShaderHandler m_textShader;
+        ShaderHandler m_textShader;
 
         mutable bool m_initialized = false;
         mutable bool m_needupdate = false;

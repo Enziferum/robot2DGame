@@ -11,6 +11,14 @@ MyApplication::MyApplication():
 void MyApplication::setup() {
     /// Setup here your resources ...
     GameApplication::setup();
+
+    {
+        robot2D::Image iconImage;
+        auto iconImagePath = "res/textures/logo.png";
+        iconImage.loadFromFile(iconImagePath);
+        m_window -> setIcon(std::move(iconImage));
+    }
+
     registerStates();
 }
 
@@ -31,21 +39,6 @@ void MyApplication::handleEvents(const robot2D::Event& event) {
 void MyApplication::update(float dt) {
     m_machine.update(dt);
 }
-
-struct Quad1: robot2D::Drawable, robot2D::Transformable {
-    robot2D::Texture* texture = nullptr;
-    robot2D::Color color = robot2D::Color::White;
-
-    void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override {
-        auto t =  getTransform();
-        states.transform *= t;
-        states.texture = texture;
-        states.color = color;
-        target.draw(states);
-    }
-};
-
-
 
 void MyApplication::render() {
     m_window -> clear();

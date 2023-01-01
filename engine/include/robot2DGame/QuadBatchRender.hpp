@@ -53,7 +53,7 @@ namespace robot2D {
 
         robot2D::VertexArray::Ptr m_vertexArray;
         robot2D::VertexBuffer::Ptr m_vertexBuffer;
-        BatchVertex* batchHead;
+        BatchVertex* batchHead{nullptr};
         mutable BatchVertex* batchElement;
     };
 

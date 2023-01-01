@@ -7,6 +7,7 @@
 namespace robot2D {
 
     using MousePressedCallback = std::function<void(robot2D::ecs::Entity, std::uint64_t)>;
+    using MouseHoverCallback = std::function<void(robot2D::ecs::Entity)>;
 
     class UISystem: public robot2D::ecs::System {
     public:
@@ -25,9 +26,15 @@ namespace robot2D {
         void update(float dt) override;
 
         std::uint32_t addMousePressedCallback(MousePressedCallback&& callback);
+        std::uint32_t addMouseHoverCallback(MouseHoverCallback&& callback);
+        std::uint32_t addMouseUnHoverCallback(MouseHoverCallback&& callback);
     private:
         std::vector<MousePressedCallback> m_mousePressedCallbacks;
+        std::vector<MouseHoverCallback> m_mouseHoverCallbacks;
+        std::vector<MouseHoverCallback> m_mouseUnHoverCallbacks;
+
         std::vector<Flags> m_mouseDownEvents;
+        std::vector<Flags> m_mouseUpEvents;
         robot2D::vec2i m_eventPosition{};
     };
 

@@ -21,7 +21,15 @@ namespace robot2D {
             if(animation.duration.asMicroSeconds() > 0) {
                 auto t = seconds(dt);
                 if(animation.type == UIAnimationComponent::AnimationType::Scale) {
-                    transform.setSizeScale(animation.getValue(dt));
+                    auto newSize = animation.getValue(dt);
+                    auto oldSize = transform.getSize();
+                    transform.setSizeScale(newSize);
+
+                    auto currPos = transform.getPosition();
+                    currPos.x -= (newSize.x - oldSize.x) / 2.F;
+                    currPos.y -= (newSize.y - oldSize.y) / 2.F;
+
+                    transform.setPosition(currPos);
                 }
                 animation.duration -= t;
             } else {

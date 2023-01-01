@@ -29,7 +29,7 @@ namespace robot2D {
 
         if(m_needUpdateZBuffer) {
             std::sort(m_entities.begin(), m_entities.end(),
-                      [](const ecs::Entity &left, const ecs::Entity &right) {
+                      [](const ecs::Entity& left, const ecs::Entity& right) {
                 return left.getComponent<DrawableComponent>().getDepth() <
                         right.getComponent<DrawableComponent>().getDepth();
             });
@@ -39,9 +39,9 @@ namespace robot2D {
     }
 
     void RenderSystem::draw(RenderTarget& target, RenderStates states) const {
-        for(auto& it: m_entities) {
-            auto& transform = it.getComponent<TransformComponent>();
-            auto& drawable = it.getComponent<DrawableComponent>();
+        for(auto& ent: m_entities) {
+            auto& transform = ent.getComponent<TransformComponent>();
+            auto& drawable = ent.getComponent<DrawableComponent>();
 
             auto t = transform.getTransform();
 
@@ -51,14 +51,13 @@ namespace robot2D {
             renderStates.color = drawable.getColor();
             renderStates.layerID = drawable.getLayerIndex();
 
-            if(getScene() -> hasSystem<TextSystem>() && it.hasComponent<TextComponent>()) {
+            if(getScene() -> hasSystem<TextSystem>() && ent.hasComponent<TextComponent>()) {
                 auto textSystem = getScene() -> getSystem<TextSystem>();
                 auto vertexArray =  textSystem -> getVertexArray();
                 renderStates.shader = const_cast<robot2D::ShaderHandler*>(&textSystem -> getShader());
                 renderStates.shader -> use();
-                auto view = target.getView(drawable.getLayerIndex()).getTransform().get_matrix();
-                renderStates.shader -> setMatrix("projection",
-                                                 const_cast<float *>(view));
+                auto view = target.getView(drawable.getLayerIndex()).getTransform();
+                renderStates.shader -> setMatrix("projection", view.get_matrix());
                 renderStates.shader -> unUse();
                 renderStates.renderInfo.indexCount = textSystem -> getIndexCount();
                 target.draw(vertexArray, renderStates);

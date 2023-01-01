@@ -9,7 +9,7 @@ enum MessageID {
 };
 
 struct PlayerEvent {
-    enum MessageType{
+    enum MessageType {
         Shot
     }type;
     robot2D::ecs::Entity entity;

@@ -1,10 +1,13 @@
 #pragma once
 #include <robot2D/Core/Vector2.hpp>
+#include <game/DummyEditor.hpp>
 
 struct PlayerComponent final {
     std::uint16_t input = 0;
     std::uint16_t prevInput = 0;
     float accelerationMultiplier = 0.f;
+
+    DebugCollider debugCollider;
 
     PlayerComponent() = default;
     ~PlayerComponent() = default;

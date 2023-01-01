@@ -1,6 +1,8 @@
+#include <robot2D/Ecs/EntityManager.hpp>
+#include <robot2D/Core/Joystick.hpp>
+
 #include <game/InputParser.hpp>
 #include <game/components/PlayerComponent.hpp>
-#include <robot2D/Ecs/EntityManager.hpp>
 
 InputParser::InputParser():
 m_inputBinding{} {}
@@ -51,6 +53,34 @@ void InputParser::handleEvent(const robot2D::Event& evt) {
 void InputParser::update() {
     if(!enabled)
         return;
+
+    if(robot2D::isJoystickAvailable(robot2D::JoystickType::One)
+       && robot2D::joystickIsGamepad(robot2D::JoystickType::One)) {
+
+        robot2D::JoystickGamepadInput gamepadInput{};
+        if(robot2D::getJoystickGamepadInput(robot2D::JoystickType::One, gamepadInput)) {
+            auto leftManipulator = gamepadInput.leftManipulatorOffset;
+            if( 0.F < leftManipulator.x && leftManipulator.x <= 1.F) {
+                m_currentInput |= InputFlag::Right;
+                m_currentInput &= ~InputFlag::Left;
+            }
+            else if(-1.F <= leftManipulator.x && leftManipulator.x < 0.F) {
+                m_currentInput = InputFlag::Left;
+                m_currentInput &= ~InputFlag::Right;
+            }
+            else {
+                m_currentInput &= ~(InputFlag::Left | InputFlag::Right);
+            }
+
+            if(gamepadInput.buttons[static_cast<int>(robot2D::JoystickGamepadButton::ButtonA)]) {
+                m_currentInput |= InputFlag::Jump;
+            }
+            else {
+                m_currentInput &= ~InputFlag::Jump;
+            }
+        }
+    }
+
     auto& player = m_playerEntity.getComponent<PlayerComponent>();
 
     //update player input history

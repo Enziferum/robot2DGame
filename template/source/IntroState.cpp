@@ -5,12 +5,13 @@
 #include <robot2DGame/components/UIAnimationComponent.hpp>
 #include <robot2DGame/Api.hpp>
 #include <robot2DGame/StateMachine.hpp>
+
 #include <game/IntroState.hpp>
 #include <game/States.hpp>
 
 namespace {
     constexpr float animationDuration = 2.F;
-    constexpr robot2D::vec2f animationTo = {300.F, 300.F};
+    constexpr robot2D::vec2f animationTo = { 300.F, 300.F };
 }
 
 IntroState::IntroState(robot2D::IStateMachine& machine,
@@ -28,17 +29,22 @@ void IntroState::setup() {
 
 void IntroState::setupEcs() {
     auto windowSz = m_window -> getSize();
+
     m_scene.addSystem<robot2D::RenderSystem>(m_messageBus);
     m_scene.addSystem<robot2D::UIAnimationSystem>(m_messageBus);
     m_scene.addSystem<robot2D::TextSystem>(m_messageBus);
 
     robot2D::vec2f startSize = {100.F, 100.F};
 
-    auto entity = robot2D::createEntity(m_scene,
-                                        {windowSz.as<float>().x / 2.F,
-                                                windowSz.as<float>().y / 2.F},
-                                        startSize,
-                                        m_textures.get(TextureID::Logo));
+    auto entity = robot2D::createEntity(
+            m_scene,
+            {
+                windowSz.as<float>().x / 2.F - startSize.x / 2.F,
+                windowSz.as<float>().y / 2.F - startSize.y / 2.F
+            },
+            startSize,
+            m_textures.get(TextureID::Logo)
+    );
 
     auto& animation = entity.addComponent<robot2D::UIAnimationComponent>();
     animation.duration = robot2D::seconds(animationDuration);
@@ -48,8 +54,11 @@ void IntroState::setupEcs() {
         m_machine.pop();
         m_machine.pushState(static_cast<uint32_t>(States::Menu));
     };
+
     auto textPos = entity.getComponent<robot2D::TransformComponent>().getPosition();
-    textPos.y += 200.F;
+
+    textPos.x += startSize.x / 2.F;
+    textPos.y += 200.F + startSize.y / 2.F;
 
     robot2D::createLabel(m_scene, textPos, "Robot2D Engine", m_font);
 }

@@ -8,7 +8,7 @@ namespace robot2D {
     m_color(robot2D::Color::White),
     m_depth{0},
     m_layerIndex{1},
-    m_needUpdateZbuffer{true}{}
+    m_needUpdateZbuffer{false}{}
 
     void DrawableComponent::setTexture(const robot2D::Texture& texture) {
         m_texture = &texture;

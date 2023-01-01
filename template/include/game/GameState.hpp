@@ -5,6 +5,7 @@
 #include "World.hpp"
 #include "GameUI.hpp"
 #include "InputParser.hpp"
+#include "DummyEditor.hpp"
 
 class GameState final: public robot2D::State {
 public:
@@ -25,4 +26,10 @@ private:
     World m_world;
     GameUI m_gameUI;
     InputParser m_inputParser;
+
+    enum class StateType {
+        Game, Editor
+    } m_stateType;
+
+    Editor m_editor;
 };

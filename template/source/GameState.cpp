@@ -5,220 +5,12 @@
 #include <fstream>
 #include <filesystem>
 #include <array>
+#include <unordered_set>
 
 namespace {
-    bool isGame = false;
     std::string mapPath = "res/map/sample.map";
 }
 
-struct Quad: public robot2D::Drawable {
-    robot2D::Color color;
-    robot2D::vec2f position;
-    robot2D::vec2f size;
-    robot2D::Texture* texture;
-    robot2D::FloatRect aabb;
-    bool updatedAABB = false;
-    robot2D::FloatRect& getAABB() {
-        if(aabb == robot2D::FloatRect{})
-            aabb = {position.x, position.y, size.x, size.y};
-        return aabb;
-    }
-
-    void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override {
-        robot2D::Transform transform;
-        transform.translate(position);
-       // transform.scale(size);
-
-        states.transform *= transform;
-        states.color = color;
-       // states.texture = texture;
-        target.draw(states);
-    }
-};
-
-struct DebugCollider: public robot2D::Drawable{
-    float borderSize = 1.F;
-    robot2D::FloatRect aabb;
-    robot2D::Color borderColor = robot2D::Color::Green;
-    robot2D::Texture* texture;
-
-    void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override {
-        std::array<robot2D::Transform, 4> quads;
-        quads[0].translate(aabb.lx, aabb.ly);
-        quads[0].scale(aabb.width,borderSize);
-
-        quads[1].translate(aabb.lx, aabb.ly);
-        quads[1].scale(borderSize, aabb.height);
-
-        quads[2].translate(aabb.lx, aabb.ly + aabb.height);
-        quads[2].scale(aabb.width,borderSize);
-
-        quads[3].translate(aabb.lx + aabb.width, aabb.ly);
-        quads[3].scale(borderSize,aabb.height);
-
-        for(auto& it: quads) {
-            states.transform = it;
-            states.color = borderColor;
-            states.texture = texture;
-            target.draw(states);
-        }
-    }
-};
-
-class Editor: public robot2D::Drawable {
-public:
-    Editor() = default;
-    ~Editor() = default;
-
-    void handleEvents(const robot2D::Event& event);
-    bool validJumpDist(robot2D::vec2f mousePoint);
-    std::size_t& getLastSize() { return lastEditorBlocksSize; }
-    const std::vector<Quad>& getBlocks() const { return editorBlocks; }
-    void setBlocks(std::vector<Quad> blocks) {editorBlocks = blocks;}
-    void draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const override;
-private:
-    std::vector<Quad> editorBlocks;
-
-    bool vertical = false;
-    bool initMouseMoveQuad = false;
-    bool createBlockMode = false;
-    bool lastValidCanJump = true;
-
-// todo calc //
-    robot2D::vec2f maxCanJumpDist = {120.F, 90.F};
-    robot2D::vec2f defaultMouseMoveQuadSize = {100.F, 10.F};
-    std::size_t lastEditorBlocksSize = 0.F;
-
-    Quad mouseMoveQuad{};
-    Quad preAddQuad{};
-
-    robot2D::Texture m_texture;
-    robot2D::Font m_font;
-    robot2D::Text m_mouseText;
-
-    bool drawJumpZones = true;
-};
-
-void Editor::handleEvents(const robot2D::Event& event) {
-
-    if(!initMouseMoveQuad) {
-        mouseMoveQuad.color = robot2D::Color::White;
-        mouseMoveQuad.color.alpha = 127.F;
-        mouseMoveQuad.size = defaultMouseMoveQuadSize;
-
-        initMouseMoveQuad = true;
-        m_texture.loadFromFile("res/textures/block.png");
-        mouseMoveQuad.texture = &m_texture;
-    }
-
-    if(event.type == robot2D::Event::MouseMoved) {
-        robot2D::vec2f move = {event.move.x, event.move.y};
-
-        if(createBlockMode) {
-            if(vertical) {
-                auto halfSize = std::abs(preAddQuad.position.y - move.y);
-                preAddQuad.size.y = halfSize * 2;
-            } else {
-                auto halfSize = std::abs(preAddQuad.position.x - move.x);
-                preAddQuad.size.x = halfSize * 2;
-            }
-            mouseMoveQuad.size = preAddQuad.size;
-            mouseMoveQuad.color.alpha = 200.F;
-        } else {
-            mouseMoveQuad.position = move - mouseMoveQuad.size / 2.F;
-            lastValidCanJump = validJumpDist(move);
-            if(lastValidCanJump) {
-                mouseMoveQuad.color = robot2D::Color::White;
-            } else {
-                mouseMoveQuad.color = robot2D::Color::Red;
-            }
-
-            mouseMoveQuad.color.alpha = 127.F;
-        }
-    }
-
-    if(event.type == robot2D::Event::KeyPressed) {
-        if(event.key.code == robot2D::Key::Q) {
-            vertical = !vertical;
-            std::swap(mouseMoveQuad.size.x, mouseMoveQuad.size.y);
-        }
-        if(event.key.code == robot2D::Key::ESCAPE && createBlockMode) {
-            createBlockMode = false;
-            if(vertical){
-                auto copy = defaultMouseMoveQuadSize;
-                std::swap(copy.x, copy.y);
-                mouseMoveQuad.size = copy;
-            }
-            else
-                mouseMoveQuad.size = defaultMouseMoveQuadSize;
-        }
-        if(event.key.code == robot2D::Key::H)
-            drawJumpZones = !drawJumpZones;
-    }
-
-    if(event.type == robot2D::Event::MousePressed) {
-        if(createBlockMode) {
-            Quad quad;
-            quad.color = robot2D::Color::White;
-            quad.size = preAddQuad.size;
-            quad.position = preAddQuad.position;
-            quad.texture = &m_texture;
-            editorBlocks.emplace_back(std::move(quad));
-            createBlockMode = false;
-            preAddQuad = {};
-
-            if(vertical){
-                auto copy = defaultMouseMoveQuadSize;
-                std::swap(copy.x, copy.y);
-                mouseMoveQuad.size = copy;
-            }
-            else
-                mouseMoveQuad.size = defaultMouseMoveQuadSize;
-        }
-        else {
-            createBlockMode = true;
-            preAddQuad.position = robot2D::vec2i{event.mouse.x, event.mouse.y}.as<float>()
-                                  - mouseMoveQuad.size / 2.F;
-            preAddQuad.size = mouseMoveQuad.size;
-        }
-    }
-}
-
-bool Editor::validJumpDist(robot2D::vec2f mousePoint) {
-    if(editorBlocks.empty())
-        return true;
-
-    for(auto& it: editorBlocks) {
-        auto aabb = it.getAABB();
-        if(!it.updatedAABB) {
-            aabb.lx -= maxCanJumpDist.x;
-            aabb.width += maxCanJumpDist.x * 2.F;
-            aabb.ly -= maxCanJumpDist.y;
-            aabb.height += maxCanJumpDist.y * 2.F;
-            it.aabb = aabb;
-            it.updatedAABB = true;
-        }
-
-        if(aabb.contains(mousePoint))
-            return true;
-    }
-
-    return false;
-}
-
-void Editor::draw(robot2D::RenderTarget& target, robot2D::RenderStates states) const {
-    for(auto& it: editorBlocks) {
-        target.draw(it);
-        if(drawJumpZones) {
-            DebugCollider collider;
-            collider.aabb = it.aabb;
-            collider.texture = it.texture;
-            target.draw(collider);
-        }
-
-    }
-    target.draw(mouseMoveQuad);
-}
 
 bool saveMap(const std::string& path, const std::vector<Quad>& quads) {
     std::ofstream file{path, std::ios::binary};
@@ -284,7 +76,7 @@ void postAddBlockEvent(robot2D::MessageBus& messageBus, const Quad& quad) {
     msg -> position = quad.position;
 }
 
-Editor editor{};
+
 
 GameState::GameState(robot2D::IStateMachine& machine,
                      robot2D::AppContext& context, robot2D::MessageBus& messageBus):
@@ -303,13 +95,85 @@ void GameState::destroy() {
     /// Destroy Resources
 }
 
+template<bool val>
+struct BoolConstant {
+    using Type = BoolConstant<val>;
+    static constexpr bool value = val;
+};
+
+using true_type = BoolConstant<true>;
+using false_type = BoolConstant<false>;
+
+template<typename FROM, typename TO>
+struct IsConvertableHelper {
+private:
+    static void aux(TO);
+
+    template<typename T, typename, typename = decltype(aux(std::declval<T>()))>
+    static true_type test(void*);
+
+    template<typename>
+    static false_type test(...);
+public:
+    using Type = decltype(test<FROM>(nullptr));
+};
+
+template<typename FROM, typename TO>
+struct IsConvertableT: IsConvertableHelper<FROM, TO>::Type {};
+
+template<typename FROM, typename TO>
+using is_convertible_t = typename IsConvertableT<FROM, TO>::Type;
+
+template<typename FROM, typename TO>
+constexpr bool is_convertible_v = IsConvertableT<FROM, TO>::value;
+
+template<typename KeyActionType,
+        typename Container = std::unordered_map<KeyActionType, robot2D::Key>,
+        typename = std::enable_if_t<std::is_enum_v<KeyActionType>>>
+struct EditorBinding {
+    using pairType = typename Container::value_type;
+
+    EditorBinding(std::initializer_list<pairType> list) {
+        m_keyMap = std::unordered_map<KeyActionType, robot2D::Key>{list};
+    }
+
+    bool add(KeyActionType actionType, robot2D::Key key) {
+        if(m_keyMap.find(actionType))
+            return false;
+        return m_keyMap.insert(std::make_pair<KeyActionType, robot2D::Key>(actionType, key)).inserted;
+    }
+
+    const robot2D::Key& getKey(const KeyActionType& keyActionType) const {
+        return m_keyMap.at(keyActionType);
+    }
+
+    bool remove(KeyActionType actionType) {
+        return static_cast<bool>(m_keyMap.erase(actionType));
+    }
+private:
+    Container m_keyMap;
+};
+
 void GameState::handleEvents(const robot2D::Event& event) {
+
+    enum class ActionType {
+        Editor, SaveMap, LoadMap
+    };
+
+    EditorBinding<ActionType> m_editorBinding{{ActionType::Editor, robot2D::Key::E},
+                                              {ActionType::SaveMap, robot2D::Key::I},
+                                              {ActionType::LoadMap, robot2D::Key::O}};
+
     if(event.type == robot2D::Event::KeyPressed
-       && event.key.code == robot2D::Key::P) {
-        isGame = !isGame;
-        if(isGame) {
-            const auto& editorBlocks = editor.getBlocks();
-            auto& lastEditorBlocksSize = editor.getLastSize();
+       && event.key.code == m_editorBinding.getKey(ActionType::Editor)) {
+        if(m_stateType == StateType::Editor)
+            m_stateType = StateType::Game;
+        else
+            m_stateType = StateType::Editor;
+
+        if(m_stateType == StateType::Game) {
+            const auto& editorBlocks = m_editor.getBlocks();
+            auto& lastEditorBlocksSize = m_editor.getLastSize();
 
             std::size_t currSize = editorBlocks.size();
             for(std::size_t it = lastEditorBlocksSize; it < currSize; ++it) {
@@ -324,19 +188,19 @@ void GameState::handleEvents(const robot2D::Event& event) {
     }
 
     if(event.type == robot2D::Event::KeyPressed) {
-        if(event.key.code == robot2D::Key::I)
-            saveMap(mapPath, editor.getBlocks());
-        if(event.key.code == robot2D::Key::O) {
+        if(event.key.code == m_editorBinding.getKey(ActionType::SaveMap))
+            saveMap(mapPath, m_editor.getBlocks());
+        if(event.key.code == m_editorBinding.getKey(ActionType::LoadMap)) {
             std::vector<Quad> blocks;
             if(loadMap(mapPath, blocks))
-                editor.setBlocks(blocks);
+                m_editor.setBlocks(blocks);
         }
     }
 
-    if(isGame)
+    if(m_stateType == StateType::Game)
         m_inputParser.handleEvent(event);
     else
-        editor.handleEvents(event);
+        m_editor.handleEvents(event);
 }
 
 void GameState::handleMessages(const robot2D::Message& message) {
@@ -345,7 +209,7 @@ void GameState::handleMessages(const robot2D::Message& message) {
 }
 
 void GameState::update(float dt) {
-    if(isGame)
+    if(m_stateType == StateType::Game)
         m_inputParser.update();
     m_world.update(dt);
     m_gameUI.update(dt);
@@ -353,7 +217,7 @@ void GameState::update(float dt) {
 
 void GameState::render() {
     m_window -> draw(m_world);
-    if(!isGame)
-        m_window -> draw(editor);
+    if(m_stateType == StateType::Editor)
+        m_window -> draw(m_editor);
     m_window -> draw(m_gameUI);
 }

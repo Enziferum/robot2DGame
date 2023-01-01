@@ -21,6 +21,16 @@ set(ENGINE_SRC
         ${INCLROOT}/systems/UISystem.hpp
         ${INCLROOT}/systems/UIAnimationSystem.hpp
 
+        #experimental
+        ${INCLROOT}/experimental/ALHelpers.hpp
+        ${INCLROOT}/experimental/ALResource.hpp
+        ${INCLROOT}/experimental/AudioData.hpp
+        ${INCLROOT}/experimental/Music.hpp
+        ${INCLROOT}/experimental/Sound.hpp
+        ${INCLROOT}/experimental/SoundBuffer.hpp
+        ${INCLROOT}/experimental/SoundSource.hpp
+        ${INCLROOT}/experimental/SoundStream.hpp
+        ${INCLROOT}/experimental/Audio.hpp
 
         ${INCLROOT}/Api.hpp
 
@@ -47,6 +57,18 @@ set(ENGINE_SRC ${ENGINE_SRC}
         ${SRCROOT}/systems/UISystem.cpp
         ${SRCROOT}/systems/UIAnimationSystem.cpp
         ${SRCROOT}/systems/TextSystem.cpp
+
+        #experimental
+        ${SRCROOT}/audio/ALHelpers.cpp
+        ${SRCROOT}/audio/IAudioReader.cpp
+        ${SRCROOT}/audio/Music.cpp
+        ${SRCROOT}/audio/Sound.cpp
+        ${SRCROOT}/audio/SoundBuffer.cpp
+        ${SRCROOT}/audio/SoundSource.cpp
+        ${SRCROOT}/audio/SoundStream.cpp
+        ${SRCROOT}/audio/WaveReader.cpp
+        ${SRCROOT}/audio/AudioDevice.cpp
+        ${SRCROOT}/audio/ALResource.cpp
 
         ${SRCROOT}/Api.cpp
 

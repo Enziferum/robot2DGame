@@ -159,7 +159,8 @@ namespace robot2D {
 
     void Text::draw(RenderTarget& target, RenderStates states) const {
         m_textShader.use();
-        m_textShader.setMatrix("projection", const_cast<float *>(target.getView().getTransform().get_matrix()));
+        m_textShader.setMatrix("projection", target.getView().getTransform().get_matrix());
+        m_textShader.unUse();
 
         if (m_needupdate)
             beforeRender();
@@ -170,7 +171,13 @@ namespace robot2D {
         }
 
         updateGeometry();
-        afterRender(false);
+
+        states.shader = const_cast<ShaderHandler*>(&m_textShader);
+        states.texture = m_font -> getTextures()[0].get();
+        states.renderInfo.indexCount = quadBatchRender.getIndexCount();
+        target.draw(quadBatchRender.getVertexArray(), states);
+
+        //afterRender(false);
     }
 
     void Text::setColor(const Color& color) {

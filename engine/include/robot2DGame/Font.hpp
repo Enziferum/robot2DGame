@@ -35,6 +35,8 @@ namespace robot2D {
 
         bool loadFromFile(const std::string& path, int charSize = 20);
 
+        vec2f calculateSize(std::string&& text) const;
+
         std::unordered_map<int, GlyphQuad> getBufferCache(float scale) const;
         const std::unordered_map<int, GlyphCharacter>& getGlyphCharacters() const;
         const std::vector<std::unique_ptr<robot2D::Texture>>& getTextures() const;
@@ -42,8 +44,8 @@ namespace robot2D {
         bool setup(const std::string& path, int charSize);
         void setupAtlas();
     private:
-        void* m_library;
-        void* m_face;
+        void* m_library{nullptr};
+        void* m_face{nullptr};
 
         std::vector<std::unique_ptr<robot2D::Texture>> m_textures;
         std::unordered_map<int, GlyphCharacter> m_glyphCharacters;

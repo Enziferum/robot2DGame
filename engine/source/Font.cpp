@@ -10,7 +10,18 @@ namespace robot2D {
 
     Font::Font() {}
 
-    Font::~Font() {}
+    Font::~Font() {
+        auto face = static_cast<FT_Face>(m_face);
+        if(face)
+            FT_Done_Face(face);
+
+        auto library = static_cast<FT_Library>(m_library);
+        if(library)
+            FT_Done_FreeType(library);
+
+        m_face = nullptr;
+        m_library = nullptr;
+    }
 
     const std::unordered_map<int, GlyphCharacter>& Font::getGlyphCharacters() const {
         return m_glyphCharacters;
@@ -28,22 +39,22 @@ namespace robot2D {
     }
 
     bool Font::setup(const std::string& path, int charSize) {
-        FT_Library ft;
+        FT_Library library;
         FT_Face face;
 
-        if (FT_Init_FreeType(&ft)) {
+        if (FT_Init_FreeType(&library)) {
             RB_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
             return false;
         }
 
-        if (FT_New_Face(ft, path.c_str(), 0, &face)) {
+        if (FT_New_Face(library, path.c_str(), 0, &face)) {
             RB_CORE_ERROR("ERROR::FREETYPE: Failed to load font");
             return false;
         }
 
         FT_Set_Pixel_Sizes(face, 0, charSize);
 
-        m_library = ft;
+        m_library = library;
         m_face = face;
 
         return true;
@@ -63,7 +74,7 @@ namespace robot2D {
         auto rowHeight = 0;
         auto currentRenderIndex = 0;
 
-        auto finalizeTexture = [this, &texture, &textureData](bool createNext)
+        auto finalizeTexture = [this,  &texture, &textureData](bool createNext)
         {
             texture -> create({TextureAtlasSize, TextureAtlasSize},
                               textureData.data(), 1, robot2D::ImageColorFormat::RED);
@@ -209,5 +220,19 @@ namespace robot2D {
         }
 
         return m_bufferCache;
+    }
+
+    vec2f Font::calculateSize(std::string&& text) const {
+        if(text.empty() || m_glyphCharacters.empty())
+            return {};
+
+        vec2f textSize{};
+        for(const auto& c: text) {
+            auto& currGlyph = m_glyphCharacters.at(c);
+            textSize.x += currGlyph.advance;
+            textSize.y = std::max(textSize.y, currGlyph.bmpSize.y);
+        }
+
+        return textSize;
     }
 }

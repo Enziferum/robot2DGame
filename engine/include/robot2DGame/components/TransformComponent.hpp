@@ -53,26 +53,6 @@ namespace robot2D {
         }
 
         void setSizeScale(const robot2D::vec2f& size) {
-            if(m_size == robot2D::vec2f{}) {
-                scale(size);
-            } else {
-                float scaleX = 0.F;
-                float scaleY = 0.F;
-                float maxX = std::max(m_size.x, size.x);
-                float minX = std::min(m_size.x, size.x);
-                float maxY = std::max(m_size.y, size.y);
-                float minY = std::min(m_size.y, size.y);
-
-                if(m_size != size) {
-                    scaleX = maxX / minX;
-                    scaleY = maxY / minY;
-                }
-                else {
-                    scaleX = size.x;
-                    scaleY = size.y;
-                }
-                scale({scaleX, scaleY});
-            }
             m_size = size;
         }
 
@@ -104,8 +84,8 @@ namespace robot2D {
         }
 
         FloatRect getLocalBounds() {
-            float w = abs(m_size.x);
-            float h = abs(m_size.y);
+            float w = std::abs(m_size.x);
+            float h = std::abs(m_size.y);
             return {0, 0, w, h};
         }
 

@@ -23,6 +23,7 @@ option(BUILD_TEMPLATE "Build Template Submodule?" ON)
 option(BUILD_EXAMPLE "Build Example Submodule?" OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(macro)
 cmake_policy(SET CMP0074 NEW)
 
 set(CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/generated/${PROJECT_NAME}-config.cmake")
@@ -62,12 +63,14 @@ find_package(Freetype)
 find_package(robot2D QUIET)
 find_package(robot2D_ext QUIET)
 
+#robot2D_find_package(OpenAL INCLUDE "OPENAL_INCLUDE_DIR" LINK "OPENAL_LIBRARY")
 
 include_directories(${FREETYPE_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/extlibs/AL)
 add_subdirectory(engine)
 
 add_library(${PROJECT_NAME} ${ENGINE_SRC})
-set(LIBS ${LIBS} robot2D ${FREETYPE_LIBRARIES})
+set(LIBS ${LIBS} robot2D ${FREETYPE_LIBRARIES} OpenAL)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC

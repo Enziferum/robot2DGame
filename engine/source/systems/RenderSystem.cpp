@@ -62,8 +62,15 @@ namespace robot2D {
                 renderStates.renderInfo.indexCount = textSystem -> getIndexCount();
                 target.draw(vertexArray, renderStates);
             }
-            else
-                target.draw(renderStates);
+            else {
+                auto& vertices = drawable.getVertices();
+                robot2D::VertexData vertexData{4};
+                for(const auto& vertex: vertices)
+                    vertexData.emplace_back(vertex);
+                target.draw(vertexData, renderStates);
+                //target.draw(renderStates);
+            }
+
         }
     }
 }

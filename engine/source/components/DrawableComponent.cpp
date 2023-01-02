@@ -38,4 +38,12 @@ namespace robot2D {
         return {0, 0, w, h};
     }
 
+    void DrawableComponent::setQuadVertexArray(const quadVertexArray& array) {
+        m_vertices = array;
+    }
+
+    const quadVertexArray& DrawableComponent::getVertices() const {
+        return m_vertices;
+    }
+
 }

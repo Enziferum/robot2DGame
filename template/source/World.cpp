@@ -12,7 +12,7 @@
 #include "systems/DynamicTreeSystem.hpp"
 
 namespace {
-    constexpr robot2D::vec2f startPos = {615.F, 435.F};
+    constexpr robot2D::vec2f startPos = {315.F, 435.F};
     constexpr robot2D::vec2f playerSize = {16.F, 16.F};
 
     static const robot2D::FloatRect PlayerBounds(-6.f, -10.f, 12.f, 10.f); //relative to player origin
@@ -102,18 +102,60 @@ void World::setupPlayer(InputParser& inputParser) {
 void World::setupMap() {
     m_map.loadFromFile("res/map/1.map");
 
-    for(const auto& block: m_map.getBlocks()) {
-        auto entity = robot2D::createEntity(m_scene,
-                                            block.position,
-                                            block.size);
+    for(int j = 0; j < 4; ++j) {
+        for(int i = 0; i < 30; ++i) {
+            robot2D::vec2f pos;
+            robot2D::vec2f size;
 
-        auto& collider2D = entity.addComponent<Collider2D>();
-        collider2D.shapes[0] = block.collisionShape;
-        collider2D.shapeCount = 1;
+            if(j == 0 || j == 1) {
+                size = {10, 30};
+            }
 
-        entity.addComponent<robot2D::BroadPhaseComponent>().setArea(collider2D.shapes[0].aabb);
-        entity.getComponent<robot2D::BroadPhaseComponent>().setFilterFlags(block.collisionShape.type);
+            if(j == 2 || j == 3) {
+                size = {30, 10};
+            }
+
+            if(j == 0) {
+                pos = {0, size.y * i};
+            }
+
+            if(j == 1) {
+                pos = {30 * 29, size.y * i};
+            }
+
+            if(j == 2) {
+                pos = {size.x * i, 0};
+            }
+
+            if(j == 3) {
+                pos = {size.x * i, 30 * 29};
+            }
+
+
+
+            auto entity = robot2D::createEntity(m_scene,
+                                                pos,
+                                                size);
+
+            auto& collider2D = entity.addComponent<Collider2D>();
+            CollisionShape collisionShape;
+            collisionShape.shape = CollisionShape::Rectangle;
+            collisionShape.aabb = {0, 0, size.x, size.y};
+            collisionShape.type = CollisionShape::Solid;
+            collisionShape.collisionFlags = CollisionShape::Player | CollisionShape::Foot | CollisionShape::LeftHand
+                                            | CollisionShape::RightHand;
+            collider2D.shapes[0] = collisionShape;
+            collider2D.shapeCount = 1;
+
+            entity.addComponent<robot2D::BroadPhaseComponent>().setArea(collider2D.shapes[0].aabb);
+            entity.getComponent<robot2D::BroadPhaseComponent>().setFilterFlags(CollisionShape::Solid);
+        }
     }
+
+
+//    for(const auto& block: m_map.getBlocks()) {
+//
+//    }
 }
 
 void World::handleMessages(const robot2D::Message& message) {

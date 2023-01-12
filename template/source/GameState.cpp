@@ -89,6 +89,8 @@ void GameState::setup() {
     /// Initalize Resources
     m_world.setup(m_inputParser);
     m_gameUI.setup();
+
+    m_stateType = StateType::Game;
 }
 
 void GameState::destroy() {
@@ -156,46 +158,46 @@ private:
 
 void GameState::handleEvents(const robot2D::Event& event) {
 
-    enum class ActionType {
-        Editor, SaveMap, LoadMap
-    };
-
-    EditorBinding<ActionType> m_editorBinding{{ActionType::Editor, robot2D::Key::E},
-                                              {ActionType::SaveMap, robot2D::Key::I},
-                                              {ActionType::LoadMap, robot2D::Key::O}};
-
-    if(event.type == robot2D::Event::KeyPressed
-       && event.key.code == m_editorBinding.getKey(ActionType::Editor)) {
-        if(m_stateType == StateType::Editor)
-            m_stateType = StateType::Game;
-        else
-            m_stateType = StateType::Editor;
-
-        if(m_stateType == StateType::Game) {
-            const auto& editorBlocks = m_editor.getBlocks();
-            auto& lastEditorBlocksSize = m_editor.getLastSize();
-
-            std::size_t currSize = editorBlocks.size();
-            for(std::size_t it = lastEditorBlocksSize; it < currSize; ++it) {
-                postAddBlockEvent(m_messageBus, editorBlocks[it]);
-            }
-
-            if(lastEditorBlocksSize == 0)
-                lastEditorBlocksSize = currSize;
-            else
-                lastEditorBlocksSize = currSize - 1;
-        }
-    }
-
-    if(event.type == robot2D::Event::KeyPressed) {
-        if(event.key.code == m_editorBinding.getKey(ActionType::SaveMap))
-            saveMap(mapPath, m_editor.getBlocks());
-        if(event.key.code == m_editorBinding.getKey(ActionType::LoadMap)) {
-            std::vector<Quad> blocks;
-            if(loadMap(mapPath, blocks))
-                m_editor.setBlocks(blocks);
-        }
-    }
+//    enum class ActionType {
+//        Editor, SaveMap, LoadMap
+//    };
+//
+//    EditorBinding<ActionType> m_editorBinding{{ActionType::Editor, robot2D::Key::E},
+//                                              {ActionType::SaveMap, robot2D::Key::I},
+//                                              {ActionType::LoadMap, robot2D::Key::O}};
+//
+//    if(event.type == robot2D::Event::KeyPressed
+//       && event.key.code == m_editorBinding.getKey(ActionType::Editor)) {
+//        if(m_stateType == StateType::Editor)
+//            m_stateType = StateType::Game;
+//        else
+//            m_stateType = StateType::Editor;
+//
+//        if(m_stateType == StateType::Game) {
+//            const auto& editorBlocks = m_editor.getBlocks();
+//            auto& lastEditorBlocksSize = m_editor.getLastSize();
+//
+//            std::size_t currSize = editorBlocks.size();
+//            for(std::size_t it = lastEditorBlocksSize; it < currSize; ++it) {
+//                postAddBlockEvent(m_messageBus, editorBlocks[it]);
+//            }
+//
+//            if(lastEditorBlocksSize == 0)
+//                lastEditorBlocksSize = currSize;
+//            else
+//                lastEditorBlocksSize = currSize - 1;
+//        }
+//    }
+//
+//    if(event.type == robot2D::Event::KeyPressed) {
+//        if(event.key.code == m_editorBinding.getKey(ActionType::SaveMap))
+//            saveMap(mapPath, m_editor.getBlocks());
+//        if(event.key.code == m_editorBinding.getKey(ActionType::LoadMap)) {
+//            std::vector<Quad> blocks;
+//            if(loadMap(mapPath, blocks))
+//                m_editor.setBlocks(blocks);
+//        }
+//    }
 
     if(m_stateType == StateType::Game)
         m_inputParser.handleEvent(event);

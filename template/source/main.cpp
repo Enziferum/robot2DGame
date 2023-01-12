@@ -57,6 +57,57 @@ private:
     robot2D::vec2f m_mousePos{};
 };
 
+template<typename T>
+class QuadTree {
+    using Ptr = std::shared_ptr<QuadTree>;
+public:
+    QuadTree(robot2D::FloatRect area, const std::size_t depth): m_depth{depth} {
+        resize(area);
+    }
+    ~QuadTree() = default;
+
+    void insert(const T& object, const robot2D::FloatRect& tArea) {
+
+    }
+
+    void resize(const robot2D::FloatRect& area) {
+        clear();
+        m_area = area;
+
+        robot2D::vec2f vChildSize = {m_area.width / 2.F, m_area.height / 2.F};
+        m_rChild = {
+
+        };
+    }
+
+    void clear() noexcept {
+        m_pItems.clear();
+        for(int i = 0; i < 4; ++i) {
+            if(m_pChild[i])
+                m_pChild[i] -> clear();
+            m_pChild[i].reset();
+        }
+    }
+
+    std::size_t size() const {
+        std::size_t count = m_pItems.size();
+        for(int i = 0; i < 4; ++i)
+            if(m_pChild[i]) count += m_pChild[i] -> size();
+        return count;
+    }
+protected:
+    std::size_t m_depth{0};
+
+    robot2D::FloatRect m_area;
+
+    std::array<robot2D::FloatRect, 4> m_rChild{};
+
+    std::array<std::shared_ptr<QuadTree<T>>, 4> m_pChild{};
+
+    std::vector<std::pair<robot2D::FloatRect, T>> m_pItems;
+};
+
+
 
 class ExampleApplication: public robot2D::GameApplication {
 public:
@@ -73,6 +124,8 @@ protected:
 private:
     Camera2D m_camera2D;
     std::vector<Quad> m_quads;
+
+    //QuadTree m_quadTree;
 
     robot2D::Text m_text;
     robot2D::Font m_font;
@@ -194,7 +247,7 @@ int runQuadTree() {
     engineConfiguration.windowSize = windowSize.as<unsigned int>();
     engineConfiguration.windowTitle = "QuadTree";
     engineConfiguration.windowContext.renderDimensionType = robot2D::WindowContext::RenderDimensionType::TwoD;
-    ROBOT2D_RUN_ENGINE(ExampleApplication, engineConfiguration)
+    ROBOT2D_RUN_ENGINE(MyApplication, engineConfiguration)
 }
 
 

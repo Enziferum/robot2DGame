@@ -57,7 +57,24 @@ namespace robot2D {
         }
         else {
             auto fileSize = std::filesystem::file_size(path);
-            m_audioData.audioSize = fileSize - waveHeaderSize;
+            m_audioData.audioSize = fileSize;
+        }
+
+        if(m_audioData.channels == 1 && m_audioData.bitsPerSample == 8)
+            m_audioData.audioFormatType = AudioFormatType::MONO8;
+        else if(m_audioData.channels == 1 && m_audioData.bitsPerSample == 16)
+            m_audioData.audioFormatType = AudioFormatType::MONO16;
+        else if(m_audioData.channels == 2 && m_audioData.bitsPerSample == 8)
+            m_audioData.audioFormatType = AudioFormatType::STEREO8;
+        else if(m_audioData.channels == 2 && m_audioData.bitsPerSample == 16)
+            m_audioData.audioFormatType = AudioFormatType::STEREO16;
+        else
+        {
+            std::cerr
+                    << "ERROR: unrecognised wave format: "
+                    << m_audioData.channels << " channels, "
+                    << m_audioData.bitsPerSample << " bps" << std::endl;
+            return false;
         }
 
         buffer.resize(m_audioData.audioSize);

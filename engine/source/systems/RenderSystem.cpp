@@ -64,13 +64,16 @@ namespace robot2D {
             }
             else {
                 auto& vertices = drawable.getVertices();
-                robot2D::VertexData vertexData{4};
+                vertices[0].position = renderStates.transform * robot2D::vec2f {0.F, 0.F};
+                vertices[1].position = renderStates.transform * robot2D::vec2f {1.F, 0.F};
+                vertices[2].position = renderStates.transform * robot2D::vec2f {1.F, 1.F};
+                vertices[3].position = renderStates.transform * robot2D::vec2f {0.F, 1.F};
+
+                robot2D::VertexData vertexData{};
                 for(const auto& vertex: vertices)
                     vertexData.emplace_back(vertex);
                 target.draw(vertexData, renderStates);
-                //target.draw(renderStates);
             }
-
         }
     }
 }

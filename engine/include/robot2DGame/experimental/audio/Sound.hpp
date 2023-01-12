@@ -9,24 +9,27 @@ namespace robot2D {
     class Sound final : public SoundSource {
     public:
         Sound();
-        Sound(SoundBuffer* soundBuffer);
-        ~Sound() override = default;
+        Sound(const Sound& copy);
+        Sound& operator=(const Sound& copy);
+
+        Sound(const SoundBuffer* soundBuffer);
+        ~Sound() override;
 
         void setLoop(bool flag);
         bool isLooping() const;
 
-        void play();
-        void stop();
-        void pause();
+        void play() override;
+        void stop() override;
+        void pause() override;
 
-        void setSoundBuffer(SoundBuffer* soundBuffer);
+        void setSoundBuffer(const SoundBuffer& soundBuffer);
         const SoundBuffer* getSoundBuffer() const;
 
     private:
         void setupSource();
 
     private:
-        SoundBuffer* m_soundBuffer;
+        const SoundBuffer* m_soundBuffer;
         bool m_loop;
     };
 }

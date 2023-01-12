@@ -32,6 +32,7 @@ namespace robot2D {
 
         void setQuadVertexArray(const quadVertexArray& array);
         const quadVertexArray& getVertices() const;
+        quadVertexArray& getVertices();
     private:
         const robot2D::Texture* m_texture;
         robot2D::Color m_color;

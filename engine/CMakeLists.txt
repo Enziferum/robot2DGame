@@ -15,11 +15,14 @@ set(ENGINE_SRC
         ${INCLROOT}/components/UIAnimationComponent.hpp
         ${INCLROOT}/components/UIHitbox.hpp
         ${INCLROOT}/components/BroadphaseComponent.hpp
+        ${INCLROOT}/components/Sprite.hpp
 
         #systems
         ${INCLROOT}/systems/RenderSystem.hpp
         ${INCLROOT}/systems/UISystem.hpp
         ${INCLROOT}/systems/UIAnimationSystem.hpp
+        ${INCLROOT}/systems/Text.hpp
+        ${INCLROOT}/systems/SpriteSystem.hpp
 
         #experimental
         ${INCLROOT}/experimental/ALHelpers.hpp
@@ -51,12 +54,14 @@ set(ENGINE_SRC ${ENGINE_SRC}
         ${SRCROOT}/components/DrawableComponent.cpp
         ${SRCROOT}/components/TextComponent.cpp
         ${SRCROOT}/components/TransformComponent.cpp
+        ${SRCROOT}/components/SpriteComponent.cpp
 
         #systems
         ${SRCROOT}/systems/RenderSystem.cpp
         ${SRCROOT}/systems/UISystem.cpp
         ${SRCROOT}/systems/UIAnimationSystem.cpp
         ${SRCROOT}/systems/TextSystem.cpp
+        ${SRCROOT}/systems/SpriteSystem.cpp
 
         #experimental
         ${SRCROOT}/audio/ALHelpers.cpp

@@ -6,13 +6,15 @@
 
 namespace robot2D {
 
-    SoundBuffer::SoundBuffer() {}
+    SoundBuffer::SoundBuffer() {
+        alCall(alGenBuffers, 1, &ALBO);
+    }
 
     SoundBuffer::~SoundBuffer() {
         alCall(alDeleteBuffers, 1, &ALBO);
     }
 
-    bool SoundBuffer::loadFromFile(const std::string& path) {
+    bool SoundBuffer::loadFromFile(const std::string& path, AudioFormatType audioFormatType) {
 
         std::unique_ptr<IAudioReader> reader = std::make_unique<WaveReader>();
         if(!reader)
@@ -22,15 +24,12 @@ namespace robot2D {
             return false;
 
         m_audioData = reader -> getAudioData();
-
-        setupBuffer();
+        setupBuffer(audioFormatType);
 
         return true;
     }
 
-    void SoundBuffer::setupBuffer() {
-        alCall(alGenBuffers, 1, &ALBO);
-
+    void SoundBuffer::setupBuffer(AudioFormatType audioFormatType) {
         ALenum format;
 
         if (m_audioData.channels == 1 && m_audioData.bitsPerSample == 8)
@@ -47,6 +46,25 @@ namespace robot2D {
                     << m_audioData.channels << " channels, "
                     << m_audioData.bitsPerSample << " bps" << std::endl;
             return;
+        }
+
+        if(audioFormatType != AudioFormatType::None) {
+            switch(audioFormatType) {
+                default:
+                    break;
+                case AudioFormatType::MONO8:
+                    format = AL_FORMAT_MONO8;
+                    break;
+                case AudioFormatType::MONO16:
+                    format = AL_FORMAT_MONO16;
+                    break;
+                case AudioFormatType::STEREO8:
+                    format = AL_FORMAT_STEREO8;
+                    break;
+                case AudioFormatType::STEREO16:
+                    format = AL_FORMAT_STEREO16;
+                    break;
+            }
         }
 
         // pack buffer //

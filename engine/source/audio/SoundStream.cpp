@@ -84,7 +84,7 @@ namespace robot2D {
 
          //   m_threadStartState = Paused;
         }
-        alCall(alSourcePause, ALSource);
+        alCall(alSourcePause, m_source);
     }
 
     void SoundStream::initalize() {
@@ -115,11 +115,11 @@ namespace robot2D {
             onGetData(&audioBuffer[i * bufferSize], bufferSize);
             buffers[i] -> setData(&audioBuffer[i * bufferSize], bufferSize);
             auto bufferID = buffers[i] -> getID();
-            alSourceQueueBuffers(ALSource, 1, &bufferID);
+            alSourceQueueBuffers(m_source, 1, &bufferID);
         }
 
         std::memset(audioBuffer, 0, bufferMax * bufferSize);
-        alCall(alSourcePlay, ALSource);
+        alCall(alSourcePlay, m_source);
 
         for(;;) {
             {
@@ -140,11 +140,11 @@ namespace robot2D {
             }
 
             ALint buffersProcessed = 0;
-            alCall(alGetSourcei, ALSource, AL_BUFFERS_PROCESSED, &buffersProcessed);
+            alCall(alGetSourcei, m_source, AL_BUFFERS_PROCESSED, &buffersProcessed);
 
             while(buffersProcessed--) {
                 ALuint processBuffer;
-                alSourceUnqueueBuffers(ALSource, 1, &processBuffer);
+                alSourceUnqueueBuffers(m_source, 1, &processBuffer);
 
                 ALBuffer::Ptr curr = nullptr;
 
@@ -162,25 +162,25 @@ namespace robot2D {
                 }
 
                 curr -> setData(&audioBuffer[index * bufferSize], bufferSize);
-                alSourceQueueBuffers(ALSource, 1, &processBuffer);
+                alSourceQueueBuffers(m_source, 1, &processBuffer);
             }
 
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(10ms);
         }
 
-        alCall(alSourceStop, ALSource);
+        alCall(alSourceStop, m_source);
         clearQueue();
     }
 
     void SoundStream::clearQueue() {
         ALint nbQueued;
-        alCall(alGetSourcei, ALSource, AL_BUFFERS_QUEUED, &nbQueued);
+        alCall(alGetSourcei, m_source, AL_BUFFERS_QUEUED, &nbQueued);
 
         // Dequeue them all
         ALuint buffer;
         for (ALint i = 0; i < nbQueued; ++i)
-            alCall(alSourceUnqueueBuffers, ALSource, 1, &buffer);
+            alCall(alSourceUnqueueBuffers, m_source, 1, &buffer);
     }
 
     void SoundStream::awaitStreamingThread() {

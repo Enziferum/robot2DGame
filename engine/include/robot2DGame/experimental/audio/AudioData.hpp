@@ -5,8 +5,8 @@
 
 namespace robot2D {
 
-    enum class AudioFormatType {
-        MONO8, MONO16, STEREO8, STEREO16
+    enum class AudioFormatType: int {
+        None = -1, MONO8 = 0, MONO16, STEREO8, STEREO16
     };
 
     struct AudioData {

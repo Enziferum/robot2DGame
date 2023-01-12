@@ -13,11 +13,11 @@ namespace robot2D {
         SoundBuffer();
         ~SoundBuffer();
 
-        bool loadFromFile(const std::string &path);
+        bool loadFromFile(const std::string& path, AudioFormatType audioFormatType = AudioFormatType::None);
         BufferID getBufferID() const { return ALBO; }
 
     private:
-        void setupBuffer();
+        void setupBuffer(AudioFormatType audioFormatType = AudioFormatType::None);
 
     private:
         AudioData m_audioData;

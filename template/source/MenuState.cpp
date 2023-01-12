@@ -84,7 +84,7 @@ void MenuState::setup() {
     m_music.setLoop(true);
     m_music.play();
 
-    m_soundBuffer.loadFromFile("res/audio/buttonHover.wav");
+    m_soundBuffer.loadFromFile("res/audio/pistol.wav");
 
 
     setupClouds();
@@ -95,7 +95,7 @@ void MenuState::setup() {
             windowSize.as<float>().x / 2 - buttonSize.x / 2,
             windowSize.as<float>().y / 2 - buttonSize.y / 2
     };
-    sound.setSoundBuffer(&m_soundBuffer);
+    sound.setSoundBuffer(m_soundBuffer);
     sound.setVolume(100.F);
 
     auto hoverCallback = [this](robot2D::ecs::Entity entity) {

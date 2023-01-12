@@ -97,10 +97,10 @@ namespace robot2D {
     template<typename BatchVertex>
     void QuadBatchRender<BatchVertex>::pack(BatchVertex&& vertex) {
         batchElement[batchElementIndex] = std::move(vertex);
-        batchElementIndex++;
-        cutQuadCntr++;
+        ++batchElementIndex;
+        ++cutQuadCntr;
         if(cutQuadCntr == quadSize) {
-            cutQuadCntr = 0;
+            cutQuadCntr = 1;
             indexCount += quadIndicesSize;
         }
     }

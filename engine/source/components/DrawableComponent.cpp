@@ -8,7 +8,12 @@ namespace robot2D {
     m_color(robot2D::Color::White),
     m_depth{0},
     m_layerIndex{1},
-    m_needUpdateZbuffer{false}{}
+    m_needUpdateZbuffer{false} {
+        m_vertices[0].texCoords = {0.F, 0.F};
+        m_vertices[1].texCoords = {1.F, 0.F};
+        m_vertices[2].texCoords = {1.F, 1.F};
+        m_vertices[3].texCoords = {0.F, 1.F};
+    }
 
     void DrawableComponent::setTexture(const robot2D::Texture& texture) {
         m_texture = &texture;
@@ -43,6 +48,10 @@ namespace robot2D {
     }
 
     const quadVertexArray& DrawableComponent::getVertices() const {
+        return m_vertices;
+    }
+
+    quadVertexArray& DrawableComponent::getVertices() {
         return m_vertices;
     }
 

@@ -80,8 +80,8 @@ namespace robot2D {
                 {robot2D::ElementType::Float4, "Color"},
             }});
 
-        m_textShader.createShader(robot2D::shaderType::vertex, textVertShader, false);
-        m_textShader.createShader(robot2D::shaderType::fragment, textFragShader, false);
+        m_textShader.createShader(robot2D::ShaderType::Vertex, textVertShader, false);
+        m_textShader.createShader(robot2D::ShaderType::Fragment, textFragShader, false);
         m_textShader.use();
         m_textShader.set("textSampler", 0);
         m_textShader.unUse();
@@ -106,7 +106,7 @@ namespace robot2D {
 
         quadBatchRender.refresh();
         robot2D::vec2f copyPos = m_pos;
-        for (const auto &s: m_text) {
+        for (const auto& s: m_text) {
             auto& preQuad = m_bufferCache[s];
 
             for (int it = 0; it < 4; ++it) {

@@ -9,6 +9,7 @@
 #include <robot2DGame/components/TextComponent.hpp>
 
 namespace robot2D {
+
     RenderSystem::RenderSystem(robot2D::MessageBus& messageBus):
             ecs::System(messageBus,typeid(RenderSystem)),
             m_needUpdateZBuffer{false} {

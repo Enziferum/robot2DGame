@@ -13,7 +13,7 @@ namespace robot2D {
 
     void SpriteSystem::update(float dt) {
         (void)dt;
-        auto convertToGL = [](float value, float textureSize) {
+        static auto convertToGL = [](float value, float textureSize) {
             return static_cast<float>(value / textureSize);
         };
 
@@ -45,7 +45,6 @@ namespace robot2D {
 
                 float left  = textureRect.lx;
                 float right = left + textureRect.width;
-
                 float bottom = textureRect.ly;
                 float top = textureRect.ly + textureRect.height;
 
@@ -60,7 +59,6 @@ namespace robot2D {
 
                 sprite.m_needUpdate = false;
             }
-
         }
 
     }

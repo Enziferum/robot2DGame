@@ -36,14 +36,16 @@ namespace robot2D {
 
     void robot2D::TextComponent::setFont(const Font& font) {
         m_font = &font;
+        if(m_font -> getImages()[0])
+            m_texture.create(*m_font -> getImages()[0].get());
     }
 
     const Font* robot2D::TextComponent::getFont() const {
         return m_font;
     }
 
-    const robot2D::Texture& TextComponent::getTexture() const {
-        return *(std::move(m_font -> getTextures()[0]));
+    const robot2D::Image& TextComponent::getImage() const {
+        return *(std::move(m_font -> getImages()[0]));
     }
 
     std::unordered_map<int, GlyphQuad>& TextComponent::getGlyphCache() {
@@ -52,5 +54,9 @@ namespace robot2D {
             m_scaled = false;
         }
         return m_bufferCache;
+    }
+
+    const robot2D::Texture &TextComponent::getTexture() const {
+        return m_texture;
     }
 }

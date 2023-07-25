@@ -73,10 +73,10 @@ namespace robot2D {
             setupGL();
 
         (void)dt;
-        for(auto& it: m_entities) {
-            auto& text = it.getComponent<TextComponent>();
+        for(auto& entity: m_entities) {
+            auto& text = entity.getComponent<TextComponent>();
 
-            it.getComponent<DrawableComponent>().setTexture(text.getTexture());
+            entity.getComponent<DrawableComponent>().setTexture(text.getTexture());
             if(text.m_needUpdate) {
                 text.m_needUpdate = false;
                 m_needUpdate = true;

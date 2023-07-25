@@ -3,7 +3,8 @@
 #include <string>
 #include <robot2D/Graphics/Transformable.hpp>
 #include <robot2D/Graphics/Color.hpp>
-#include <robot2DGame/Font.hpp>
+#include <robot2D/Graphics/Texture.hpp>
+#include <robot2D/Graphics/Font.hpp>
 
 namespace robot2D {
     class TextComponent: public robot2D::Transformable {
@@ -23,6 +24,7 @@ namespace robot2D {
         void setFont(const Font& font);
         const Font* getFont() const;
 
+        const robot2D::Image& getImage() const;
         const robot2D::Texture& getTexture() const;
         std::unordered_map<int, GlyphQuad>& getGlyphCache();
     private:
@@ -32,7 +34,7 @@ namespace robot2D {
         bool m_needUpdate;
         std::unordered_map<int, GlyphQuad> m_bufferCache;
         friend class TextSystem;
-
+        robot2D::Texture m_texture;
         bool m_scaled = false;
     };
 }

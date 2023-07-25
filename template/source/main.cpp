@@ -230,21 +230,21 @@ int writeConfig() {
 }
 
 int runQuadTree() {
-    mobb::IniReader iniReader{};
-    if(!iniReader.loadFromFile("res/config.ini")){
-        return -1;
-    }
-
-    if(!iniReader.hasSection("Window"))
-        return -2;
-
-    if(!iniReader["Window"].hasValue("size"))
-        return -3;
-
-    auto windowSize = iniReader["Window"]["size"].as<robot2D::vec2f>();
+//    mobb::IniReader iniReader{};
+//    if(!iniReader.loadFromFile("res/config.ini")){
+//        return -1;
+//    }
+//
+//    if(!iniReader.hasSection("Window"))
+//        return -2;
+//
+//    if(!iniReader["Window"].hasValue("size"))
+//        return -3;
+//
+//    auto windowSize = iniReader["Window"]["size"].as<robot2D::vec2f>();
 
     robot2D::EngineConfiguration engineConfiguration;
-    engineConfiguration.windowSize = windowSize.as<unsigned int>();
+    engineConfiguration.windowSize = {1280, 920};
     engineConfiguration.windowTitle = "QuadTree";
     engineConfiguration.windowContext.renderDimensionType = robot2D::WindowContext::RenderDimensionType::TwoD;
     ROBOT2D_RUN_ENGINE(MyApplication, engineConfiguration)

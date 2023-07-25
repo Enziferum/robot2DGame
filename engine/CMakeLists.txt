@@ -4,10 +4,8 @@ set(ENGINE_SRC
         #Core
         ${INCLROOT}/Application.hpp
         ${INCLROOT}/State.hpp
-        ${INCLROOT}/StateMachine.hpp
-        ${INCLROOT}/Font.hpp
+        ${INCLROOT}/StateMachine.hpp+
         ${INCLROOT}/QuadBatchRender.hpp
-        ${INCLROOT}/Text.hpp
 
         #components
         ${INCLROOT}/components/DrawableComponent.hpp
@@ -21,7 +19,6 @@ set(ENGINE_SRC
         ${INCLROOT}/systems/RenderSystem.hpp
         ${INCLROOT}/systems/UISystem.hpp
         ${INCLROOT}/systems/UIAnimationSystem.hpp
-        ${INCLROOT}/systems/Text.hpp
         ${INCLROOT}/systems/SpriteSystem.hpp
 
         #experimental
@@ -47,8 +44,6 @@ set(ENGINE_SRC ${ENGINE_SRC}
         ${SRCROOT}/Application.cpp
         ${SRCROOT}/State.cpp
         ${SRCROOT}/StateMachine.cpp
-        ${SRCROOT}/Font.cpp
-        ${SRCROOT}/Text.cpp
 
         #components
         ${SRCROOT}/components/DrawableComponent.cpp

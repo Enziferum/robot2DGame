@@ -1,11 +1,13 @@
 #include <game/GameState.hpp>
 #include <game/Messages.hpp>
-#include <robot2DGame/Text.hpp>
+#include <robot2D/Graphics/Text.hpp>
 
 #include <fstream>
 #include <filesystem>
 #include <array>
 #include <unordered_set>
+#include <string>
+#include <type_traits>
 
 namespace {
     std::string mapPath = "res/map/sample.map";

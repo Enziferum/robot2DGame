@@ -11,7 +11,7 @@ namespace robot2D {
 
     class State {
     public:
-        State(IStateMachine& machine, AppContext& context, MessageBus& messageBus);
+        State(IStateMachine& machine, AppContext& context, TMessageBus<>& messageBus);
         virtual ~State() = 0;
 
         virtual void setup() = 0;
@@ -26,7 +26,7 @@ namespace robot2D {
     protected:
         IStateMachine& m_machine;
         AppContext& m_context;
-        MessageBus& m_messageBus;
+        TMessageBus<>& m_messageBus;
         RenderWindow* m_window;
         bool m_initalized = false;
     };

@@ -5,7 +5,7 @@
 #include <robot2D/Graphics/Drawable.hpp>
 #include <robot2D/Graphics/RenderTarget.hpp>
 #include <robot2D/Core/Event.hpp>
-#include <robot2DGame/Text.hpp>
+#include <robot2D/Graphics/Text.hpp>
 
 struct Quad: public robot2D::Drawable {
     robot2D::Color color;
